@@ -1,124 +1,124 @@
-# Design System
+# 设计系统
 
-## Theme
+## 主题
 
-Light. Bright, airy, outdoor feel — optimized for daylight and mobile use. Users are often outside or in well-lit spaces.
+明亮。明亮、通透、户外感 — 针对日间和移动端使用优化。用户经常在户外或光线充足的空间使用。
 
-## Color Strategy
+## 颜色策略
 
-Restrained: tinted neutrals + one committed accent. The accent carries brand identity; neutrals stay warm and intentional.
+克制：着色中性色 + 一个明确的强调色。强调色承载品牌识别；中性色保持温暖且有意图。
 
-### Palette (OKLCH)
+### 调色板 (OKLCH)
 
-| Role | Token | OKLCH | Usage |
+| 角色 | Token | OKLCH | 用途 |
 |---|---|---|---|
-| Accent | `--color-accent` | `oklch(0.65 0.15 200)` | CTAs, active states, booking buttons, key highlights |
-| Accent hover | `--color-accent-hover` | `oklch(0.58 0.17 200)` | Hover/press states on accent elements |
-| Accent subtle | `--color-accent-subtle` | `oklch(0.95 0.03 200)` | Tinted backgrounds, badges, subtle highlights |
-| Neutral 900 | `--color-text` | `oklch(0.18 0.008 200)` | Primary text — tinted toward accent, never pure black |
-| Neutral 600 | `--color-text-secondary` | `oklch(0.45 0.008 200)` | Secondary text, labels |
-| Neutral 200 | `--color-border` | `oklch(0.88 0.006 200)` | Borders, dividers |
-| Neutral 50 | `--color-surface` | `oklch(0.975 0.004 200)` | Page background — barely tinted |
-| White | `--color-surface-raised` | `oklch(0.99 0.003 200)` | Cards, elevated surfaces — never pure white |
+| 强调色 | `--color-accent` | `oklch(0.65 0.15 200)` | CTA、激活状态、预订按钮、关键高亮 |
+| 强调色悬停 | `--color-accent-hover` | `oklch(0.58 0.17 200)` | 强调元素的悬停/按压状态 |
+| 强调色浅色 | `--color-accent-subtle` | `oklch(0.95 0.03 200)` | 着色背景、徽章、微妙高亮 |
+| 中性色 900 | `--color-text` | `oklch(0.18 0.008 200)` | 主要文本 — 向强调色着色，永不使用纯黑 |
+| 中性色 600 | `--color-text-secondary` | `oklch(0.45 0.008 200)` | 次要文本、标签 |
+| 中性色 200 | `--color-border` | `oklch(0.88 0.006 200)` | 边框、分隔线 |
+| 中性色 50 | `--color-surface` | `oklch(0.975 0.004 200)` | 页面背景 — 几乎无着色 |
+| 白色 | `--color-surface-raised` | `oklch(0.99 0.003 200)` | 卡片、提升表面 — 永不使用纯白 |
 
-### Color Rules
+### 颜色规则
 
-- Never use `#000` or `#fff`. All neutrals tinted toward accent hue (200).
-- Accent used on primary CTAs, active nav, booking flows, and key data points. Not decorative.
-- Status colors: success `oklch(0.7 0.15 145)`, warning `oklch(0.75 0.15 85)`, error `oklch(0.6 0.18 25)`.
+- 永不使用 `#000` 或 `#fff`。所有中性色向强调色相 (200) 着色。
+- 强调色用于主要 CTA、激活导航、预订流程和关键数据点。不用于装饰。
+- 状态颜色：成功 `oklch(0.7 0.15 145)`，警告 `oklch(0.75 0.15 85)`，错误 `oklch(0.6 0.18 25)`。
 
-## Typography
+## 排版
 
-### Font Stack
+### 字体栈
 
-- **Display / Headings**: Inter, system-ui, sans-serif — bold weights (700–800). Geometric, sharp, athletic.
-- **Body**: Inter, system-ui, sans-serif — regular (400) and medium (500). Clean, highly legible.
+- **展示/标题**：Inter, system-ui, sans-serif — 粗体 (700–800)。几何、锐利、运动感。
+- **正文**：Inter, system-ui, sans-serif — 常规 (400) 和中等 (500)。清晰、高度可读。
 
-Load via `@fontsource/inter` or Google Fonts. Fallback to system-ui.
+通过 `@fontsource/inter` 或 Google Fonts 加载。回退到 system-ui。
 
-### Scale
+### 字号比例
 
-| Level | Size | Weight | Line height | Usage |
+| 层级 | 大小 | 字重 | 行高 | 用途 |
 |---|---|---|---|---|
-| Display | 2.25rem (36px) | 800 | 1.1 | Hero headlines, key numbers |
-| H1 | 1.75rem (28px) | 700 | 1.2 | Page titles |
-| H2 | 1.375rem (22px) | 700 | 1.25 | Section headings |
-| H3 | 1.125rem (18px) | 600 | 1.3 | Card titles, subheadings |
-| Body | 1rem (16px) | 400 | 1.5 | Default text |
-| Body small | 0.875rem (14px) | 400 | 1.5 | Labels, metadata |
-| Caption | 0.75rem (12px) | 500 | 1.4 | Timestamps, badges |
+| 展示 | 2.25rem (36px) | 800 | 1.1 | 主视觉标题、关键数字 |
+| H1 | 1.75rem (28px) | 700 | 1.2 | 页面标题 |
+| H2 | 1.375rem (22px) | 700 | 1.25 | 区域标题 |
+| H3 | 1.125rem (18px) | 600 | 1.3 | 卡片标题、副标题 |
+| 正文 | 1rem (16px) | 400 | 1.5 | 默认文本 |
+| 正文小号 | 0.875rem (14px) | 400 | 1.5 | 标签、元数据 |
+| 说明文字 | 0.75rem (12px) | 500 | 1.4 | 时间戳、徽章 |
 
-Scale ratio: ~1.25 between steps.
+比例系数：步间约 1.25。
 
-### Rules
+### 规则
 
-- Body line length: max 70ch.
-- Hierarchy through scale + weight contrast, never color alone.
-- Uppercase only for badges and micro-labels, tracked at 0.05em.
+- 正文行长度：最大 70ch。
+- 通过字号 + 字重对比建立层级，永不仅靠颜色。
+- 大写仅用于徽章和微型标签，字间距 0.05em。
 
-## Spacing
+## 间距
 
-Base unit: 4px. Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80.
+基础单位：4px。比例：4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80。
 
-- Section padding: 48–64px vertical, 24px horizontal (mobile: 32px vertical, 16px horizontal).
-- Card padding: 20–24px.
-- Inline spacing: 8px between related items, 16px between groups.
-- Vary rhythm — avoid uniform padding everywhere. Tighter near content, looser between sections.
+- 区域内边距：垂直 48–64px，水平 24px（移动端：垂直 32px，水平 16px）。
+- 卡片内边距：20–24px。
+- 行内间距：相关项目间 8px，分组间 16px。
+- 变化节奏 — 避免到处使用统一内边距。靠近内容更紧凑，区域间更宽松。
 
-## Elevation
+## 层级
 
-Minimal. Light theme doesn't need heavy shadows.
+最小化。明亮主题不需要重阴影。
 
-- Level 0: flat (page background)
-- Level 1: `0 1px 3px oklch(0.18 0.008 200 / 0.08)` — cards, dropdowns
-- Level 2: `0 4px 12px oklch(0.18 0.008 200 / 0.12)` — modals, popovers
-- Level 3: `0 8px 24px oklch(0.18 0.008 200 / 0.16)` — floating elements
+- 层级 0：平面（页面背景）
+- 层级 1：`0 1px 3px oklch(0.18 0.008 200 / 0.08)` — 卡片、下拉菜单
+- 层级 2：`0 4px 12px oklch(0.18 0.008 200 / 0.12)` — 模态框、弹出层
+- 层级 3：`0 8px 24px oklch(0.18 0.008 200 / 0.16)` — 浮动元素
 
-No glassmorphism. No heavy drop shadows.
+不要毛玻璃效果。不要重投影阴影。
 
-## Border Radius
+## 圆角
 
-- Small (badges, chips): 6px
-- Medium (cards, inputs): 12px
-- Large (modals, panels): 16px
-- Pill (tags, avatars): 999px
+- 小（徽章、标签）：6px
+- 中（卡片、输入框）：12px
+- 大（模态框、面板）：16px
+- 胶囊形（标签、头像）：999px
 
-Consistent, not excessive. Rounded enough to feel friendly, not so much it feels卡通.
+保持一致，不过度。圆润到感觉友好，但不要太卡通。
 
-## Motion
+## 动效
 
-Snappy & physical. Ease-out with exponential curves.
+轻快且有质感。使用指数曲线的 ease-out。
 
-- Default easing: `cubic-bezier(0.16, 1, 0.3, 1)` (ease-out-expo)
-- Duration: 150ms micro (hover, focus), 250ms small (expand, toggle), 400ms large (page transitions)
-- No bounce, no elastic, no spring physics.
-- Animate transform and opacity only — never animate layout properties.
-- Subtle parallax on scroll for venue images. Elements should feel like they have physical mass.
+- 默认缓动：`cubic-bezier(0.16, 1, 0.3, 1)` (ease-out-expo)
+- 持续时间：150ms 微交互（悬停、聚焦），250ms 小动画（展开、切换），400ms 大动画（页面过渡）
+- 不要弹跳、不要弹性、不要弹簧物理。
+- 只动画 transform 和 opacity — 永不动画布局属性。
+- 滚动时为场地图片添加微妙视差。元素应感觉有物理质量。
 
-## Components
+## 组件
 
-### Buttons
+### 按钮
 
-- **Primary**: accent background, white text, 12px radius, bold weight. Hover: darken accent.
-- **Secondary**: accent outline, accent text, transparent background. Hover: accent subtle fill.
-- **Ghost**: no border, neutral text, subtle hover background.
-- Min height: 44px (touch target). Padding: 12px 24px.
+- **主要**：强调色背景，白色文本，12px 圆角，粗体。悬停：加深强调色。
+- **次要**：强调色描边，强调色文本，透明背景。悬停：强调色浅色填充。
+- **幽灵**：无边框，中性色文本，微妙悬停背景。
+- 最小高度：44px（触摸目标）。内边距：12px 24px。
 
-### Cards
+### 卡片
 
-- Surface-raised background, 12px radius, level 1 shadow.
-- No side-stripe borders. No nested cards.
-- Image on top, content below. Padding: 20px.
-- Hover: subtle lift (translateY -2px, shadow increase).
+- 提升表面背景，12px 圆角，层级 1 阴影。
+- 无侧边条纹边框。无嵌套卡片。
+- 图片在上，内容在下。内边距：20px。
+- 悬停：微妙上浮（translateY -2px，阴影增大）。
 
-### Inputs
+### 输入框
 
-- Neutral-200 border, 12px radius, 44px min height.
-- Focus: accent border + subtle accent ring.
-- Labels above, not floating.
+- 中性色 200 边框，12px 圆角，最小高度 44px。
+- 聚焦：强调色边框 + 微妙强调色光圈。
+- 标签在上方，不浮动。
 
-### Navigation
+### 导航
 
-- Top nav for mobile, optional sidebar for desktop.
-- Active state: accent text + accent-subtle background.
-- No hamburger menus for primary nav — show key items directly.
+- 移动端顶部导航，桌面端可选侧边栏。
+- 激活状态：强调色文本 + 强调色浅色背景。
+- 主要导航不要汉堡菜单 — 直接显示关键项目。

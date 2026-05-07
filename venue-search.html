@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>发现场馆 - 运动场地预订</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       Design Tokens (from DESIGN.md)
+       ============================================ */
+    :root {
+      --color-accent: oklch(0.65 0.15 200);
+      --color-accent-hover: oklch(0.58 0.17 200);
+      --color-accent-subtle: oklch(0.95 0.03 200);
+      --color-accent-ring: oklch(0.65 0.15 200 / 0.25);
+      --color-text: oklch(0.18 0.008 200);
+      --color-text-secondary: oklch(0.45 0.008 200);
+      --color-text-tertiary: oklch(0.55 0.006 200);
+      --color-border: oklch(0.88 0.006 200);
+      --color-surface: oklch(0.975 0.004 200);
+      --color-surface-raised: oklch(0.99 0.003 200);
+      --color-success: oklch(0.7 0.15 145);
+      --color-success-subtle: oklch(0.95 0.04 145);
+      --color-warning: oklch(0.75 0.15 85);
+      --color-error: oklch(0.6 0.18 25);
+      --color-error-subtle: oklch(0.95 0.04 25);
+      --color-disabled: oklch(0.75 0.005 200);
+
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --text-display: 2.25rem;
+      --text-h1: 1.75rem;
+      --text-h2: 1.375rem;
+      --text-h3: 1.125rem;
+      --text-body: 1rem;
+      --text-body-sm: 0.875rem;
+      --text-caption: 0.75rem;
+      --line-height-tight: 1.1;
+      --line-height-heading: 1.2;
+      --line-height-body: 1.5;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      --shadow-sm: 0 1px 3px oklch(0.18 0.008 200 / 0.08);
+      --shadow-md: 0 4px 12px oklch(0.18 0.008 200 / 0.12);
+      --shadow-lg: 0 8px 24px oklch(0.18 0.008 200 / 0.16);
+
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-expo: cubic-bezier(0.7, 0, 0.84, 0);
+      --duration-micro: 150ms;
+      --duration-small: 250ms;
+      --duration-large: 400ms;
+    }
+
+    /* ============================================
+       Reset & Base
+       ============================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--text-body);
+      line-height: var(--line-height-body);
+      color: var(--color-text);
+      background: var(--color-surface);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    button {
+      font-family: inherit;
+      font-size: inherit;
+      border: none;
+      cursor: pointer;
+      background: none;
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ============================================
+       App Shell
+       ============================================ */
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .app-main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+    }
+
+    /* ============================================
+       Header
+       ============================================ */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--color-surface-raised);
+      padding: var(--space-4) var(--space-5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .header-location {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 0;
+    }
+
+    .header-location svg {
+      width: 18px;
+      height: 18px;
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    .header-location-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-location-label {
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    .header-location-name {
+      font-size: var(--text-body);
+      font-weight: 700;
+      color: var(--color-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .header-icon-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      transition: background var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .header-icon-btn:hover {
+      background: var(--color-accent-subtle);
+    }
+
+    .header-icon-btn:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .header-icon-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ============================================
+       Filter Bar
+       ============================================ */
+    .filter-bar {
+      position: sticky;
+      top: 60px;
+      z-index: 90;
+      background: var(--color-surface-raised);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-3) 0;
+    }
+
+    .filter-scroll {
+      display: flex;
+      gap: var(--space-2);
+      padding: 0 var(--space-5);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-chip {
+      flex-shrink: 0;
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--color-border);
+      font-size: var(--text-body-sm);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      white-space: nowrap;
+    }
+
+    .filter-chip:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .filter-chip:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .filter-chip.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: white;
+    }
+
+    .filter-chip svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .filter-results-count {
+      font-size: var(--text-caption);
+      color: var(--color-text-tertiary);
+      padding: var(--space-2) var(--space-5) 0;
+      font-weight: 500;
+    }
+
+    /* ============================================
+       Venue Cards
+       ============================================ */
+    .venue-list {
+      flex: 1;
+      padding: var(--space-4) var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .venue-card {
+      background: var(--color-surface-raised);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: transform var(--duration-small) var(--ease-out-expo),
+                  box-shadow var(--duration-small) var(--ease-out-expo);
+      cursor: pointer;
+    }
+
+    @media (hover: hover) {
+      .venue-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+    }
+
+    .venue-card:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .venue-card-image {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: var(--color-accent-subtle);
+      display: block;
+    }
+
+    .venue-card-body {
+      padding: var(--space-4) var(--space-5) var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .venue-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .venue-card-name {
+      font-size: var(--text-h3);
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: var(--line-height-heading);
+    }
+
+    .venue-card-rating {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .venue-card-rating svg {
+      width: 14px;
+      height: 14px;
+      color: var(--color-warning);
+    }
+
+    .venue-card-rating span {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .venue-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+
+    .venue-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--space-1) var(--space-3);
+      background: var(--color-accent-subtle);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-caption);
+      font-weight: 600;
+      color: var(--color-accent);
+      letter-spacing: 0.02em;
+    }
+
+    .venue-tag-more {
+      background: var(--color-surface);
+      color: var(--color-text-tertiary);
+    }
+
+    .venue-card-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .venue-meta-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-body-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .venue-meta-item svg {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-tertiary);
+      flex-shrink: 0;
+    }
+
+    .venue-meta-item strong {
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .venue-card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .venue-price {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .venue-price-label {
+      font-size: var(--text-caption);
+      color: var(--color-text-tertiary);
+    }
+
+    .venue-price-amount {
+      font-size: var(--text-h3);
+      font-weight: 800;
+      color: var(--color-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .venue-price-amount .venue-price-unit {
+      font-size: var(--text-caption);
+      font-weight: 500;
+      color: var(--color-text-tertiary);
+    }
+
+    .btn-book {
+      padding: var(--space-3) var(--space-5);
+      min-height: 44px;
+      font-size: var(--text-body-sm);
+      font-weight: 700;
+      color: white;
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      flex-shrink: 0;
+    }
+
+    .btn-book:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-book:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btn-book:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       Map Toggle (Mobile)
+       ============================================ */
+    .map-toggle-fab {
+      position: fixed;
+      bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+      right: var(--space-5);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--color-text);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      z-index: 80;
+      transition: all var(--duration-small) var(--ease-out-expo);
+    }
+
+    .map-toggle-fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 32px oklch(0.18 0.008 200 / 0.24);
+    }
+
+    .map-toggle-fab:active {
+      transform: scale(0.95);
+    }
+
+    .map-toggle-fab:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+    }
+
+    .map-toggle-fab svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .map-toggle-label {
+      position: absolute;
+      bottom: calc(100% + var(--space-2));
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: var(--text-caption);
+      font-weight: 600;
+      background: var(--color-text);
+      color: white;
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-sm);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .map-toggle-fab:hover .map-toggle-label {
+      opacity: 1;
+    }
+
+    /* ============================================
+       Map Overlay (Mobile)
+       ============================================ */
+    .map-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: var(--color-surface-raised);
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform var(--duration-large) var(--ease-out-expo);
+    }
+
+    .map-overlay.open {
+      transform: translateY(0);
+    }
+
+    .map-overlay-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface-raised);
+      z-index: 1;
+    }
+
+    .map-overlay-title {
+      font-size: var(--text-body);
+      font-weight: 700;
+    }
+
+    .map-close-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      transition: background var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .map-close-btn:hover {
+      background: var(--color-accent-subtle);
+    }
+
+    .map-close-btn:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .map-close-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .map-area {
+      flex: 1;
+      background: var(--color-accent-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      color: var(--color-text-tertiary);
+    }
+
+    .map-placeholder svg {
+      width: 48px;
+      height: 48px;
+      opacity: 0.4;
+    }
+
+    .map-placeholder span {
+      font-size: var(--text-body-sm);
+      font-weight: 500;
+    }
+
+    /* Map pins */
+    .map-pin {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50% 50% 50% 0;
+      background: var(--color-accent);
+      transform: rotate(-45deg) translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      transition: all var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .map-pin:hover, .map-pin.active {
+      background: var(--color-accent-hover);
+      transform: rotate(-45deg) translate(-50%, -50%) scale(1.15);
+    }
+
+    .map-pin span {
+      transform: rotate(45deg);
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+    }
+
+    /* Bottom sheet on map */
+    .map-bottom-sheet {
+      background: var(--color-surface-raised);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: 0 -4px 16px oklch(0.18 0.008 200 / 0.1);
+      max-height: 40vh;
+      overflow-y: auto;
+      padding: var(--space-4) var(--space-5);
+    }
+
+    .map-sheet-handle {
+      width: 36px;
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: var(--color-border);
+      margin: 0 auto var(--space-4);
+    }
+
+    .map-sheet-venue {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-border);
+      align-items: center;
+    }
+
+    .map-sheet-venue:last-child {
+      border-bottom: none;
+    }
+
+    .map-sheet-venue-img {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--color-accent-subtle);
+    }
+
+    .map-sheet-venue-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .map-sheet-venue-name {
+      font-size: var(--text-body-sm);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .map-sheet-venue-detail {
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+
+    .map-sheet-book-btn {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-caption);
+      font-weight: 700;
+      color: white;
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+      transition: all var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .map-sheet-book-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    /* ============================================
+       Quick Book Sheet
+       ============================================ */
+    .quick-book-backdrop {
+      position: fixed;
+      inset: 0;
+      background: oklch(0.18 0.008 200 / 0.4);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration-small) var(--ease-out-expo);
+    }
+
+    .quick-book-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .quick-book-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 310;
+      background: var(--color-surface-raised);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: 0 -4px 24px oklch(0.18 0.008 200 / 0.16);
+      transform: translateY(100%);
+      transition: transform var(--duration-large) var(--ease-out-expo);
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .quick-book-sheet.open {
+      transform: translateY(0);
+    }
+
+    .quick-book-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      background: var(--color-surface-raised);
+      z-index: 1;
+    }
+
+    .quick-book-venue {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-width: 0;
+    }
+
+    .quick-book-venue-img {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--color-accent-subtle);
+    }
+
+    .quick-book-venue-name {
+      font-size: var(--text-body-sm);
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .quick-book-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+      transition: background var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .quick-book-close:hover {
+      background: var(--color-accent-subtle);
+    }
+
+    .quick-book-close svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .quick-book-body {
+      padding: var(--space-5);
+    }
+
+    .quick-book-label {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-3);
+    }
+
+    .quick-book-slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-2);
+    }
+
+    .quick-book-slot {
+      padding: var(--space-3) var(--space-2);
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--color-border);
+      text-align: center;
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      cursor: pointer;
+      min-height: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .quick-book-slot:hover {
+      border-color: var(--color-accent);
+      background: var(--color-accent-subtle);
+    }
+
+    .quick-book-slot:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .quick-book-slot.selected {
+      border-color: var(--color-accent);
+      background: var(--color-accent);
+    }
+
+    .quick-book-slot.selected .qb-slot-time,
+    .quick-book-slot.selected .qb-slot-price {
+      color: white;
+    }
+
+    .quick-book-slot.unavailable {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .qb-slot-time {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .qb-slot-price {
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+    }
+
+    .quick-book-footer {
+      padding: var(--space-4) var(--space-5);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .quick-book-see-all {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-accent);
+      padding: var(--space-3) var(--space-4);
+      transition: opacity var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .quick-book-see-all:hover {
+      opacity: 0.7;
+    }
+
+    .quick-book-confirm {
+      padding: var(--space-3) var(--space-6);
+      min-height: 44px;
+      font-size: var(--text-body-sm);
+      font-weight: 700;
+      color: white;
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .quick-book-confirm:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .quick-book-confirm:disabled {
+      background: var(--color-disabled);
+      cursor: not-allowed;
+    }
+
+    /* ============================================
+       Skeleton Loading
+       ============================================ */
+    .skeleton {
+      background: linear-gradient(90deg, var(--color-border) 25%, var(--color-surface) 50%, var(--color-border) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-pulse 1.5s ease-in-out infinite;
+      border-radius: var(--radius-sm);
+    }
+
+    @keyframes skeleton-pulse {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--color-surface-raised);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .skeleton-card .skeleton-image {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+    }
+
+    .skeleton-card .skeleton-body {
+      padding: var(--space-4) var(--space-5) var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .skeleton-line {
+      height: 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .skeleton-line.w-60 { width: 60%; }
+    .skeleton-line.w-40 { width: 40%; }
+    .skeleton-line.w-80 { width: 80%; }
+    .skeleton-line.w-30 { width: 30%; }
+
+    .skeleton-chips {
+      display: flex;
+      gap: var(--space-2);
+      padding: 0 var(--space-5);
+    }
+
+    .skeleton-chip {
+      width: 72px;
+      height: 36px;
+      border-radius: var(--radius-pill);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skeleton {
+        animation: none;
+      }
+    }
+
+    /* ============================================
+       Empty State
+       ============================================ */
+    .empty-state {
+      padding: var(--space-16) var(--space-5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .empty-state-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--color-accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty-state-icon svg {
+      width: 36px;
+      height: 36px;
+      color: var(--color-accent);
+    }
+
+    .empty-state-title {
+      font-size: var(--text-h2);
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: var(--line-height-heading);
+    }
+
+    .empty-state-desc {
+      font-size: var(--text-body-sm);
+      color: var(--color-text-secondary);
+      max-width: 300px;
+      line-height: var(--line-height-body);
+    }
+
+    .empty-state-action {
+      margin-top: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--text-body-sm);
+      font-weight: 700;
+      color: white;
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .empty-state-action:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .empty-state-action:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       Error State
+       ============================================ */
+    .error-state {
+      padding: var(--space-16) var(--space-5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .error-state-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--color-error-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .error-state-icon svg {
+      width: 36px;
+      height: 36px;
+      color: var(--color-error);
+    }
+
+    .error-state-title {
+      font-size: var(--text-h2);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .error-state-desc {
+      font-size: var(--text-body-sm);
+      color: var(--color-text-secondary);
+      max-width: 300px;
+    }
+
+    .error-state-retry {
+      margin-top: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--text-body-sm);
+      font-weight: 700;
+      color: white;
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .error-state-retry:hover {
+      background: var(--color-accent-hover);
+    }
+
+    /* ============================================
+       Location Prompt (First Visit)
+       ============================================ */
+    .location-prompt {
+      background: var(--color-accent-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin: var(--space-4) var(--space-5);
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .location-prompt-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--color-surface-raised);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .location-prompt-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-accent);
+    }
+
+    .location-prompt-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .location-prompt-title {
+      font-size: var(--text-body-sm);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .location-prompt-desc {
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+
+    .location-prompt-btn {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-caption);
+      font-weight: 700;
+      color: white;
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      flex-shrink: 0;
+      transition: background var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .location-prompt-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    /* ============================================
+       Card Entrance Animation
+       ============================================ */
+    .venue-card {
+      animation: card-enter var(--duration-large) var(--ease-out-expo) both;
+    }
+
+    .venue-card:nth-child(1) { animation-delay: 0ms; }
+    .venue-card:nth-child(2) { animation-delay: 60ms; }
+    .venue-card:nth-child(3) { animation-delay: 120ms; }
+    .venue-card:nth-child(4) { animation-delay: 180ms; }
+    .venue-card:nth-child(5) { animation-delay: 240ms; }
+    .venue-card:nth-child(6) { animation-delay: 300ms; }
+
+    @keyframes card-enter {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .venue-card {
+        animation: none;
+      }
+    }
+
+    /* ============================================
+       Toast
+       ============================================ */
+    .toast {
+      position: fixed;
+      bottom: calc(80px + env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-text);
+      color: var(--color-surface-raised);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transition: all var(--duration-small) var(--ease-out-expo);
+      pointer-events: none;
+      z-index: 400;
+      white-space: nowrap;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ============================================
+       Desktop: Split Layout with Map
+       ============================================ */
+    @media (min-width: 1024px) {
+      .app {
+        max-width: 100%;
+        flex-direction: row;
+      }
+
+      .app-main {
+        width: 60%;
+        overflow-y: auto;
+      }
+
+      .app-map {
+        width: 40%;
+        position: sticky;
+        top: 0;
+        height: 100dvh;
+        background: var(--color-accent-subtle);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .map-desktop-header {
+        padding: var(--space-5);
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-surface-raised);
+      }
+
+      .map-desktop-title {
+        font-size: var(--text-body-sm);
+        font-weight: 600;
+        color: var(--color-text-secondary);
+      }
+
+      .map-desktop-area {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .map-desktop-area .map-placeholder {
+        width: 100%;
+        height: 100%;
+      }
+
+      .map-toggle-fab {
+        display: none;
+      }
+
+      .venue-card {
+        animation: none;
+        opacity: 1;
+      }
+
+      .filter-bar {
+        top: 0;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .app {
+        max-width: 640px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- Mobile Layout -->
+    <div class="app-main" id="appMain">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-location">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <div class="header-location-text">
+            <span class="header-location-label">当前位置</span>
+            <span class="header-location-name" id="locationName">朝阳区, 北京</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="header-icon-btn" id="searchBtn" aria-label="搜索场馆">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar" id="filterBar">
+        <div class="filter-scroll" id="filterScroll">
+          <!-- Filters rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="filter-results-count" id="resultsCount"></div>
+
+      <!-- Content -->
+      <main class="venue-list" id="venueList">
+        <!-- Venue cards or states rendered by JS -->
+      </main>
+    </div>
+
+    <!-- Desktop Map Panel -->
+    <div class="app-map" id="appMap" style="display: none;">
+      <div class="map-desktop-header">
+        <div class="map-desktop-title">附近场馆</div>
+      </div>
+      <div class="map-desktop-area" id="mapDesktopArea">
+        <div class="map-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/>
+            <line x1="16" y1="6" x2="16" y2="22"/>
+          </svg>
+          <span>地图加载中...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map Toggle FAB (Mobile) -->
+  <button class="map-toggle-fab" id="mapToggleFab" aria-label="查看地图">
+    <span class="map-toggle-label">地图</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+      <line x1="8" y1="2" x2="8" y2="18"/>
+      <line x1="16" y1="6" x2="16" y2="22"/>
+    </svg>
+  </button>
+
+  <!-- Map Overlay (Mobile) -->
+  <div class="map-overlay" id="mapOverlay">
+    <div class="map-overlay-header">
+      <span class="map-overlay-title">附近场馆</span>
+      <button class="map-close-btn" id="mapCloseBtn" aria-label="关闭地图">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="map-area" id="mapArea">
+      <div class="map-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+          <line x1="8" y1="2" x2="8" y2="18"/>
+          <line x1="16" y1="6" x2="16" y2="22"/>
+        </svg>
+        <span>地图加载中...</span>
+      </div>
+    </div>
+    <div class="map-bottom-sheet" id="mapBottomSheet">
+      <div class="map-sheet-handle"></div>
+      <!-- Compact venue list rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Quick Book Sheet -->
+  <div class="quick-book-backdrop" id="quickBookBackdrop"></div>
+  <div class="quick-book-sheet" id="quickBookSheet">
+    <div class="quick-book-header">
+      <div class="quick-book-venue">
+        <div class="quick-book-venue-img" id="qbVenueImg"></div>
+        <span class="quick-book-venue-name" id="qbVenueName"></span>
+      </div>
+      <button class="quick-book-close" id="quickBookClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="quick-book-body">
+      <div class="quick-book-label">今天可预约</div>
+      <div class="quick-book-slots" id="qbSlots">
+        <!-- Slots rendered by JS -->
+      </div>
+    </div>
+    <div class="quick-book-footer">
+      <button class="quick-book-see-all" id="qbSeeAll">查看全部时段</button>
+      <button class="quick-book-confirm" id="qbConfirm" disabled>确认预约</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ============================================
+    // State
+    // ============================================
+    const state = {
+      view: 'list', // list | map
+      loading: true,
+      error: false,
+      venues: [],
+      filters: {
+        sport: null,
+        sort: 'distance',
+      },
+      quickBook: {
+        open: false,
+        venueId: null,
+        selectedSlot: null,
+      },
+      showLocationPrompt: false,
+    };
+
+    // ============================================
+    // Mock Data
+    // ============================================
+    const SPORTS = [
+      { id: 'all', label: '全部' },
+      { id: 'basketball', label: '篮球' },
+      { id: 'tennis', label: '网球' },
+      { id: 'badminton', label: '羽毛球' },
+      { id: 'swimming', label: '游泳' },
+      { id: 'football', label: '足球' },
+      { id: 'yoga', label: '瑜伽' },
+      { id: 'gym', label: '健身' },
+    ];
+
+    const SORT_OPTIONS = [
+      { id: 'distance', label: '距离最近' },
+      { id: 'price', label: '价格最低' },
+      { id: 'rating', label: '评分最高' },
+    ];
+
+    const VENUES = [
+      {
+        id: 1,
+        name: '朝阳体育中心',
+        sports: ['篮球', '羽毛球', '游泳'],
+        distance: '0.3 km',
+        priceFrom: 80,
+        priceUnit: '/小时',
+        nextAvailable: '今天 14:00',
+        rating: 4.8,
+        image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=380&fit=crop',
+        slots: ['14:00', '15:00', '16:00', '18:00', '19:00', '20:00'],
+      },
+      {
+        id: 2,
+        name: '奥森网球俱乐部',
+        sports: ['网球'],
+        distance: '1.2 km',
+        priceFrom: 150,
+        priceUnit: '/小时',
+        nextAvailable: '今天 16:00',
+        rating: 4.9,
+        image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=600&h=380&fit=crop',
+        slots: ['16:00', '17:00', '19:00'],
+      },
+      {
+        id: 3,
+        name: '望京足球公园',
+        sports: ['足球', '篮球'],
+        distance: '2.1 km',
+        priceFrom: 200,
+        priceUnit: '/场',
+        nextAvailable: '明天 09:00',
+        rating: 4.6,
+        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&h=380&fit=crop',
+        slots: ['09:00', '10:00', '14:00', '15:00'],
+      },
+      {
+        id: 4,
+        name: '三里屯瑜伽空间',
+        sports: ['瑜伽', '普拉提'],
+        distance: '0.8 km',
+        priceFrom: 120,
+        priceUnit: '/节',
+        nextAvailable: '今天 18:30',
+        rating: 4.7,
+        image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=380&fit=crop',
+        slots: ['18:30', '20:00'],
+      },
+      {
+        id: 5,
+        name: '国贸健身工场',
+        sports: ['健身', '游泳', '拳击'],
+        distance: '1.5 km',
+        priceFrom: 60,
+        priceUnit: '/次',
+        nextAvailable: '今天 12:00',
+        rating: 4.5,
+        image: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600&h=380&fit=crop',
+        slots: ['12:00', '13:00', '15:00', '17:00', '18:00', '19:00', '20:00', '21:00'],
+      },
+      {
+        id: 6,
+        name: '五棵松篮球馆',
+        sports: ['篮球'],
+        distance: '3.8 km',
+        priceFrom: 100,
+        priceUnit: '/小时',
+        nextAvailable: '今天 20:00',
+        rating: 4.4,
+        image: 'https://images.unsplash.com/photo-1505666287802-931dc83948e5?w=600&h=380&fit=crop',
+        slots: ['20:00', '21:00'],
+      },
+    ];
+
+    // ============================================
+    // DOM References
+    // ============================================
+    const appMain = document.getElementById('appMain');
+    const appMap = document.getElementById('appMap');
+    const venueList = document.getElementById('venueList');
+    const filterScroll = document.getElementById('filterScroll');
+    const resultsCount = document.getElementById('resultsCount');
+    const mapToggleFab = document.getElementById('mapToggleFab');
+    const mapOverlay = document.getElementById('mapOverlay');
+    const mapCloseBtn = document.getElementById('mapCloseBtn');
+    const mapBottomSheet = document.getElementById('mapBottomSheet');
+    const quickBookBackdrop = document.getElementById('quickBookBackdrop');
+    const quickBookSheet = document.getElementById('quickBookSheet');
+    const quickBookClose = document.getElementById('quickBookClose');
+    const qbVenueImg = document.getElementById('qbVenueImg');
+    const qbVenueName = document.getElementById('qbVenueName');
+    const qbSlots = document.getElementById('qbSlots');
+    const qbSeeAll = document.getElementById('qbSeeAll');
+    const qbConfirm = document.getElementById('qbConfirm');
+    const toastEl = document.getElementById('toast');
+
+    // ============================================
+    // Helpers
+    // ============================================
+    function showToast(message, duration = 2500) {
+      toastEl.textContent = message;
+      toastEl.classList.add('visible');
+      setTimeout(() => toastEl.classList.remove('visible'), duration);
+    }
+
+    function getFilteredVenues() {
+      let filtered = [...VENUES];
+      if (state.filters.sport && state.filters.sport !== 'all') {
+        const sportLabel = SPORTS.find(s => s.id === state.filters.sport)?.label;
+        if (sportLabel) {
+          filtered = filtered.filter(v => v.sports.some(s => s.includes(sportLabel)));
+        }
+      }
+      if (state.filters.sort === 'price') {
+        filtered.sort((a, b) => a.priceFrom - b.priceFrom);
+      } else if (state.filters.sort === 'rating') {
+        filtered.sort((a, b) => b.rating - a.rating);
+      }
+      // distance is default order
+      return filtered;
+    }
+
+    // ============================================
+    // Render: Filters
+    // ============================================
+    function renderFilters() {
+      const chips = SPORTS.map(sport => {
+        const isActive = state.filters.sport === sport.id || (!state.filters.sport && sport.id === 'all');
+        return `<button class="filter-chip ${isActive ? 'active' : ''}" data-sport="${sport.id}">${sport.label}</button>`;
+      }).join('');
+
+      const sortChip = `<button class="filter-chip" id="sortChip" data-action="sort">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/>
+        </svg>
+        ${SORT_OPTIONS.find(o => o.id === state.filters.sort)?.label || '排序'}
+      </button>`;
+
+      filterScroll.innerHTML = chips + sortChip;
+
+      // Bind events
+      filterScroll.querySelectorAll('.filter-chip[data-sport]').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const sportId = chip.dataset.sport;
+          state.filters.sport = sportId === 'all' ? null : sportId;
+          renderFilters();
+          renderVenues();
+        });
+      });
+
+      const sortChipEl = filterScroll.querySelector('#sortChip');
+      if (sortChipEl) {
+        sortChipEl.addEventListener('click', () => {
+          const currentIdx = SORT_OPTIONS.findIndex(o => o.id === state.filters.sort);
+          state.filters.sort = SORT_OPTIONS[(currentIdx + 1) % SORT_OPTIONS.length].id;
+          renderFilters();
+          renderVenues();
+        });
+      }
+    }
+
+    // ============================================
+    // Render: Venue Cards
+    // ============================================
+    function renderVenueCard(venue) {
+      const tagsHtml = venue.sports.slice(0, 3).map(s => `<span class="venue-tag">${s}</span>`).join('');
+      const moreCount = venue.sports.length - 3;
+      const moreTag = moreCount > 0 ? `<span class="venue-tag venue-tag-more">+${moreCount}</span>` : '';
+
+      return `
+        <article class="venue-card" tabindex="0" data-venue-id="${venue.id}" aria-label="${venue.name}">
+          <img class="venue-card-image" src="${venue.image}" alt="${venue.name}" loading="lazy">
+          <div class="venue-card-body">
+            <div class="venue-card-top">
+              <h3 class="venue-card-name">${venue.name}</h3>
+              <div class="venue-card-rating">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span>${venue.rating}</span>
+              </div>
+            </div>
+            <div class="venue-card-tags">${tagsHtml}${moreTag}</div>
+            <div class="venue-card-meta">
+              <span class="venue-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                ${venue.distance}
+              </span>
+              <span class="venue-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                ${venue.nextAvailable}
+              </span>
+            </div>
+            <div class="venue-card-bottom">
+              <div class="venue-price">
+                <span class="venue-price-label">起步价</span>
+                <span class="venue-price-amount">¥${venue.priceFrom}<span class="venue-price-unit">${venue.priceUnit}</span></span>
+              </div>
+              <button class="btn-book" data-book-venue="${venue.id}">预约</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderSkeletonCards() {
+      let html = '';
+      for (let i = 0; i < 3; i++) {
+        html += `
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-image"></div>
+            <div class="skeleton-body">
+              <div class="skeleton skeleton-line w-60"></div>
+              <div class="skeleton skeleton-line w-40"></div>
+              <div class="skeleton skeleton-line w-80"></div>
+              <div class="skeleton skeleton-line w-30"></div>
+            </div>
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    function renderSkeletonFilters() {
+      let html = '';
+      for (let i = 0; i < 5; i++) {
+        html += `<div class="skeleton skeleton-chip"></div>`;
+      }
+      filterScroll.innerHTML = html;
+    }
+
+    function renderEmptyState() {
+      return `
+        <div class="empty-state">
+          <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <line x1="8" y1="8" x2="14" y2="14"/>
+              <line x1="14" y1="8" x2="8" y2="14"/>
+            </svg>
+          </div>
+          <h2 class="empty-state-title">没有找到场馆</h2>
+          <p class="empty-state-desc">试试调整筛选条件，或扩大搜索范围看看附近还有什么。</p>
+          <button class="empty-state-action" id="clearFiltersBtn">清除筛选</button>
+        </div>
+      `;
+    }
+
+    function renderErrorState() {
+      return `
+        <div class="error-state">
+          <div class="error-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h2 class="error-state-title">加载失败</h2>
+          <p class="error-state-desc">网络似乎出了点问题，请检查连接后重试。</p>
+          <button class="error-state-retry" id="retryBtn">重新加载</button>
+        </div>
+      `;
+    }
+
+    function renderLocationPrompt() {
+      return `
+        <div class="location-prompt">
+          <div class="location-prompt-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div class="location-prompt-content">
+            <div class="location-prompt-title">开启定位，发现附近场馆</div>
+            <div class="location-prompt-desc">授权位置权限，为你推荐最近的运动场地</div>
+          </div>
+          <button class="location-prompt-btn" id="enableLocationBtn">开启定位</button>
+        </div>
+      `;
+    }
+
+    function renderVenues() {
+      if (state.loading) {
+        venueList.innerHTML = renderSkeletonCards();
+        resultsCount.textContent = '';
+        return;
+      }
+
+      if (state.error) {
+        venueList.innerHTML = renderErrorState();
+        resultsCount.textContent = '';
+        const retryBtn = document.getElementById('retryBtn');
+        if (retryBtn) retryBtn.addEventListener('click', () => loadData());
+        return;
+      }
+
+      const filtered = getFilteredVenues();
+
+      if (filtered.length === 0) {
+        venueList.innerHTML = renderEmptyState();
+        resultsCount.textContent = '';
+        const clearBtn = document.getElementById('clearFiltersBtn');
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => {
+            state.filters.sport = null;
+            renderFilters();
+            renderVenues();
+          });
+        }
+        return;
+      }
+
+      let html = '';
+      if (state.showLocationPrompt) {
+        html += renderLocationPrompt();
+      }
+      html += filtered.map(v => renderVenueCard(v)).join('');
+      venueList.innerHTML = html;
+
+      const plural = filtered.length === 1 ? '个场馆' : '个场馆';
+      resultsCount.textContent = `找到 ${filtered.length} ${plural}`;
+
+      // Bind card click and book button events
+      venueList.querySelectorAll('.venue-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-book')) return;
+          const id = parseInt(card.dataset.venueId);
+          showToast('跳转到场馆详情...');
+        });
+      });
+
+      venueList.querySelectorAll('.btn-book').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.bookVenue);
+          openQuickBook(id);
+        });
+      });
+
+      const enableLocationBtn = document.getElementById('enableLocationBtn');
+      if (enableLocationBtn) {
+        enableLocationBtn.addEventListener('click', () => {
+          state.showLocationPrompt = false;
+          document.getElementById('locationName').textContent = '朝阳区, 北京';
+          renderVenues();
+          showToast('定位已开启');
+        });
+      }
+    }
+
+    // ============================================
+    // Render: Map Bottom Sheet
+    // ============================================
+    function renderMapBottomSheet() {
+      const filtered = getFilteredVenues();
+      const venuesHtml = filtered.map(v => `
+        <div class="map-sheet-venue" data-venue-id="${v.id}">
+          <div class="map-sheet-venue-img" style="background-image: url('${v.image}'); background-size: cover; background-position: center;"></div>
+          <div class="map-sheet-venue-info">
+            <div class="map-sheet-venue-name">${v.name}</div>
+            <div class="map-sheet-venue-detail">${v.distance} · ${v.sports[0]} · ¥${v.priceFrom}${v.priceUnit}</div>
+          </div>
+          <button class="map-sheet-book-btn" data-book-venue="${v.id}">预约</button>
+        </div>
+      `).join('');
+
+      mapBottomSheet.innerHTML = `<div class="map-sheet-handle"></div>` + venuesHtml;
+
+      mapBottomSheet.querySelectorAll('.map-sheet-book-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openQuickBook(parseInt(btn.dataset.bookVenue));
+        });
+      });
+    }
+
+    // ============================================
+    // Render: Desktop Map Pins
+    // ============================================
+    function renderDesktopMapPins() {
+      const area = document.getElementById('mapDesktopArea');
+      if (!area) return;
+      const filtered = getFilteredVenues();
+
+      // Remove existing pins
+      area.querySelectorAll('.map-pin').forEach(p => p.remove());
+
+      const positions = [
+        { top: '25%', left: '30%' },
+        { top: '45%', left: '65%' },
+        { top: '60%', left: '20%' },
+        { top: '35%', left: '50%' },
+        { top: '70%', left: '55%' },
+        { top: '20%', left: '75%' },
+      ];
+
+      filtered.forEach((v, i) => {
+        const pos = positions[i % positions.length];
+        const pin = document.createElement('div');
+        pin.className = 'map-pin';
+        pin.style.top = pos.top;
+        pin.style.left = pos.left;
+        pin.innerHTML = `<span>${i + 1}</span>`;
+        pin.title = v.name;
+        pin.addEventListener('click', () => {
+          area.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active'));
+          pin.classList.add('active');
+          showToast(v.name);
+        });
+        area.appendChild(pin);
+      });
+    }
+
+    // ============================================
+    // Quick Book
+    // ============================================
+    function openQuickBook(venueId) {
+      const venue = VENUES.find(v => v.id === venueId);
+      if (!venue) return;
+
+      state.quickBook.open = true;
+      state.quickBook.venueId = venueId;
+      state.quickBook.selectedSlot = null;
+
+      qbVenueName.textContent = venue.name;
+      qbVenueImg.style.backgroundImage = `url('${venue.image}')`;
+      qbVenueImg.style.backgroundSize = 'cover';
+      qbVenueImg.style.backgroundPosition = 'center';
+
+      const slotsHtml = venue.slots.map((slot, i) => `
+        <button class="quick-book-slot" data-slot="${i}">
+          <span class="qb-slot-time">${slot}</span>
+          <span class="qb-slot-price">¥${venue.priceFrom}</span>
+        </button>
+      `).join('');
+      qbSlots.innerHTML = slotsHtml;
+
+      qbSlots.querySelectorAll('.quick-book-slot').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = parseInt(el.dataset.slot);
+          state.quickBook.selectedSlot = idx;
+          qbSlots.querySelectorAll('.quick-book-slot').forEach(s => s.classList.remove('selected'));
+          el.classList.add('selected');
+          qbConfirm.disabled = false;
+        });
+      });
+
+      qbConfirm.disabled = true;
+      quickBookBackdrop.classList.add('open');
+      quickBookSheet.classList.add('open');
+    }
+
+    function closeQuickBook() {
+      state.quickBook.open = false;
+      quickBookBackdrop.classList.remove('open');
+      quickBookSheet.classList.remove('open');
+    }
+
+    quickBookClose.addEventListener('click', closeQuickBook);
+    quickBookBackdrop.addEventListener('click', closeQuickBook);
+
+    qbConfirm.addEventListener('click', () => {
+      if (state.quickBook.selectedSlot === null) return;
+      const venue = VENUES.find(v => v.id === state.quickBook.venueId);
+      const slot = venue?.slots[state.quickBook.selectedSlot];
+      closeQuickBook();
+      showToast(`已选择 ${venue.name} ${slot} 时段`);
+    });
+
+    qbSeeAll.addEventListener('click', () => {
+      closeQuickBook();
+      showToast('跳转到完整预约页面...');
+    });
+
+    // ============================================
+    // Map Toggle
+    // ============================================
+    mapToggleFab.addEventListener('click', () => {
+      mapOverlay.classList.add('open');
+      renderMapBottomSheet();
+      document.body.style.overflow = 'hidden';
+    });
+
+    mapCloseBtn.addEventListener('click', () => {
+      mapOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+
+    // Escape key for overlays
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (state.quickBook.open) closeQuickBook();
+        if (mapOverlay.classList.contains('open')) {
+          mapOverlay.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      }
+    });
+
+    // ============================================
+    // Desktop Layout Detection
+    // ============================================
+    function updateLayout() {
+      const isDesktop = window.innerWidth >= 1024;
+      appMap.style.display = isDesktop ? 'flex' : 'none';
+      mapToggleFab.style.display = isDesktop ? 'none' : 'flex';
+      if (isDesktop && !state.loading && !state.error) {
+        renderDesktopMapPins();
+      }
+    }
+
+    window.addEventListener('resize', updateLayout);
+
+    // ============================================
+    // Data Loading
+    // ============================================
+    function loadData() {
+      state.loading = true;
+      state.error = false;
+      state.showLocationPrompt = false;
+      renderSkeletonFilters();
+      renderVenues();
+
+      // Simulate loading
+      setTimeout(() => {
+        // 10% chance of error for demo
+        const isError = Math.random() < 0.1;
+        if (isError) {
+          state.error = true;
+          state.loading = false;
+        } else {
+          state.loading = false;
+          state.venues = VENUES;
+          state.showLocationPrompt = true;
+        }
+        renderFilters();
+        renderVenues();
+        updateLayout();
+      }, 1200);
+    }
+
+    // ============================================
+    // Search button (placeholder)
+    // ============================================
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      showToast('搜索功能即将上线');
+    });
+
+    // ============================================
+    // Init
+    // ============================================
+    loadData();
+  </script>
+</body>
+</html>

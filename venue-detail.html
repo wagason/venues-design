@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>场馆详情</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       Design Tokens
+       ============================================ */
+    :root {
+      --color-accent: oklch(0.65 0.15 200);
+      --color-accent-hover: oklch(0.58 0.17 200);
+      --color-accent-subtle: oklch(0.95 0.03 200);
+      --color-text: oklch(0.18 0.008 200);
+      --color-text-secondary: oklch(0.45 0.008 200);
+      --color-text-tertiary: oklch(0.55 0.006 200);
+      --color-text-on-accent: oklch(0.99 0.003 200);
+      --color-border: oklch(0.88 0.006 200);
+      --color-surface: oklch(0.975 0.004 200);
+      --color-surface-raised: oklch(0.99 0.003 200);
+      --color-success: oklch(0.7 0.15 145);
+      --color-success-subtle: oklch(0.95 0.04 145);
+      --color-warning: oklch(0.75 0.15 85);
+      --color-error: oklch(0.6 0.18 25);
+
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --text-display: 2.25rem;
+      --text-h1: 1.75rem;
+      --text-h2: 1.375rem;
+      --text-h3: 1.125rem;
+      --text-body: 1rem;
+      --text-body-sm: 0.875rem;
+      --text-caption: 0.75rem;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+
+      --shadow-sm: 0 1px 3px oklch(0.18 0.008 200 / 0.08);
+      --shadow-md: 0 4px 12px oklch(0.18 0.008 200 / 0.12);
+      --shadow-lg: 0 8px 24px oklch(0.18 0.008 200 / 0.16);
+
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-micro: 150ms;
+      --duration-small: 250ms;
+      --duration-large: 400ms;
+    }
+
+    /* ============================================
+       Reset & Base
+       ============================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--text-body);
+      line-height: 1.5;
+      color: var(--color-text);
+      background: var(--color-surface);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    }
+
+    button {
+      font-family: inherit;
+      font-size: inherit;
+      border: none;
+      cursor: pointer;
+      background: none;
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ============================================
+       App Shell
+       ============================================ */
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100dvh;
+    }
+
+    /* ============================================
+       Photo Carousel
+       ============================================ */
+    .carousel {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--color-accent-subtle);
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform var(--duration-large) var(--ease-out-expo);
+    }
+
+    .carousel-slide {
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: var(--space-3);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .carousel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: oklch(1 0 0 / 0.5);
+      transition: all var(--duration-small) var(--ease-out-expo);
+    }
+
+    .carousel-dot.active {
+      width: 20px;
+      border-radius: 3px;
+      background: oklch(1 0 0 / 0.95);
+    }
+
+    /* Floating Nav Buttons */
+    .carousel-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: var(--space-4);
+      z-index: 10;
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      background: oklch(0.18 0.008 200 / 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: white;
+      transition: background var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .nav-btn:hover {
+      background: oklch(0.18 0.008 200 / 0.6);
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    /* ============================================
+       Venue Info
+       ============================================ */
+    .venue-info {
+      padding: var(--space-5);
+    }
+
+    .venue-sport-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-3);
+      background: var(--color-accent-subtle);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-caption);
+      font-weight: 600;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-3);
+    }
+
+    .venue-sport-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .venue-name {
+      font-size: var(--text-h1);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--color-text);
+      margin-bottom: var(--space-3);
+    }
+
+    .venue-rating-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-3);
+    }
+
+    .venue-rating {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-body);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .venue-rating svg {
+      width: 18px;
+      height: 18px;
+      color: var(--color-warning);
+    }
+
+    .venue-rating-count {
+      font-size: var(--text-body-sm);
+      font-weight: 400;
+      color: var(--color-text-secondary);
+    }
+
+    .venue-address {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      font-size: var(--text-body-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+
+    .venue-address svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--color-text-tertiary);
+    }
+
+    .venue-address-text {
+      flex: 1;
+    }
+
+    .venue-distance {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-caption);
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-left: var(--space-2);
+    }
+
+    /* ============================================
+       Section Divider
+       ============================================ */
+    .divider {
+      height: 8px;
+      background: var(--color-surface);
+    }
+
+    /* ============================================
+       Facilities
+       ============================================ */
+    .facilities-section {
+      padding: var(--space-5);
+    }
+
+    .section-label {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-4);
+    }
+
+    .facilities-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    .facility-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .facility-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--color-accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-accent);
+    }
+
+    .facility-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .facility-name {
+      font-size: var(--text-caption);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-align: center;
+    }
+
+    /* ============================================
+       Time Slots Preview
+       ============================================ */
+    .slots-section {
+      padding: var(--space-5);
+    }
+
+    .slots-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+    }
+
+    .slots-date-scroll {
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: var(--space-4);
+    }
+
+    .slots-date-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .date-chip {
+      flex-shrink: 0;
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--color-border);
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .date-chip:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .date-chip.selected {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-text-on-accent);
+    }
+
+    .slots-preview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-2);
+    }
+
+    .slot-chip {
+      padding: var(--space-2) var(--space-1);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-size: var(--text-caption);
+      font-weight: 600;
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      cursor: pointer;
+      border: 1.5px solid transparent;
+    }
+
+    .slot-chip.available {
+      background: var(--color-accent-subtle);
+      color: var(--color-accent);
+      border-color: var(--color-accent-subtle);
+      cursor: pointer;
+    }
+
+    .slot-chip.available:hover {
+      border-color: var(--color-accent);
+      background: oklch(0.9 0.06 200);
+    }
+
+    .slot-chip.available:active {
+      transform: scale(0.95);
+    }
+
+    .slot-chip.booked {
+      background: var(--color-surface);
+      color: var(--color-text-tertiary);
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .slots-more {
+      margin-top: var(--space-3);
+      text-align: center;
+    }
+
+    .slots-more-btn {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-accent);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-pill);
+      transition: background var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .slots-more-btn:hover {
+      background: var(--color-accent-subtle);
+    }
+
+    /* ============================================
+       Reviews Preview
+       ============================================ */
+    .reviews-section {
+      padding: var(--space-5);
+    }
+
+    .reviews-summary {
+      display: flex;
+      gap: var(--space-5);
+      margin-bottom: var(--space-5);
+    }
+
+    .reviews-score {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .reviews-score-number {
+      font-size: var(--text-display);
+      font-weight: 800;
+      color: var(--color-text);
+      line-height: 1;
+    }
+
+    .reviews-score-stars {
+      display: flex;
+      gap: 2px;
+      margin-top: var(--space-1);
+      justify-content: center;
+    }
+
+    .reviews-score-stars svg {
+      width: 14px;
+      height: 14px;
+      color: var(--color-warning);
+    }
+
+    .reviews-score-count {
+      font-size: var(--text-caption);
+      color: var(--color-text-tertiary);
+      margin-top: var(--space-1);
+    }
+
+    .reviews-bars {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      justify-content: center;
+    }
+
+    .review-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-caption);
+      color: var(--color-text-tertiary);
+    }
+
+    .review-bar-row span:first-child {
+      width: 8px;
+      text-align: right;
+    }
+
+    .review-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .review-bar-fill {
+      height: 100%;
+      background: var(--color-warning);
+      border-radius: 2px;
+      transition: width var(--duration-large) var(--ease-out-expo);
+    }
+
+    .review-bar-row span:last-child {
+      width: 28px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Individual Reviews */
+    .review-card {
+      padding: var(--space-4) 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-2);
+    }
+
+    .review-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-caption);
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+
+    .review-author {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .review-date {
+      font-size: var(--text-caption);
+      color: var(--color-text-tertiary);
+    }
+
+    .review-stars {
+      display: flex;
+      gap: 2px;
+      margin-left: auto;
+    }
+
+    .review-stars svg {
+      width: 12px;
+      height: 12px;
+      color: var(--color-warning);
+    }
+
+    .review-text {
+      font-size: var(--text-body-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       Description
+       ============================================ */
+    .desc-section {
+      padding: var(--space-5);
+    }
+
+    .desc-text {
+      font-size: var(--text-body-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .desc-text p + p {
+      margin-top: var(--space-3);
+    }
+
+    /* ============================================
+       Bottom CTA Bar
+       ============================================ */
+    .bottom-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--color-surface-raised);
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-4) var(--space-5);
+      padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+    }
+
+    .bottom-cta-inner {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .cta-price {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cta-price-label {
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+    }
+
+    .cta-price-amount {
+      font-size: var(--text-h2);
+      font-weight: 800;
+      color: var(--color-accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cta-price-unit {
+      font-size: var(--text-caption);
+      font-weight: 400;
+      color: var(--color-text-tertiary);
+    }
+
+    .btn-book {
+      padding: var(--space-3) var(--space-8);
+      min-height: 48px;
+      font-size: var(--text-body);
+      font-weight: 700;
+      color: var(--color-text-on-accent);
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+
+    .btn-book:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-book:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btn-book:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       Animations
+       ============================================ */
+    .fade-in {
+      animation: fadeIn var(--duration-large) var(--ease-out-expo) both;
+    }
+
+    .fade-in-delay-1 { animation-delay: 100ms; }
+    .fade-in-delay-2 { animation-delay: 200ms; }
+    .fade-in-delay-3 { animation-delay: 300ms; }
+    .fade-in-delay-4 { animation-delay: 400ms; }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ============================================
+       Desktop Adaptation
+       ============================================ */
+    @media (min-width: 768px) {
+      .app {
+        max-width: 640px;
+      }
+
+      .carousel {
+        aspect-ratio: 16 / 9;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        overflow: hidden;
+      }
+
+      .facilities-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+
+      .slots-preview {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .app {
+        max-width: 960px;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: var(--space-8);
+        padding: var(--space-8) var(--space-5);
+      }
+
+      .carousel {
+        grid-column: 1 / -1;
+        aspect-ratio: 21 / 9;
+        border-radius: var(--radius-lg);
+      }
+
+      .bottom-cta-inner {
+        max-width: 960px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- Photo Carousel -->
+    <div class="carousel" role="region" aria-label="场馆照片">
+      <div class="carousel-nav">
+        <a href="index.html" class="nav-btn" aria-label="返回">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </a>
+        <div class="nav-right">
+          <button class="nav-btn" aria-label="分享">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/>
+              <circle cx="6" cy="12" r="3"/>
+              <circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+          </button>
+          <button class="nav-btn" aria-label="收藏">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=960&h=720&fit=crop" alt="篮球场内景 - 全场木地板" loading="eager">
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?w=960&h=720&fit=crop" alt="篮球场灯光" loading="lazy">
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=960&h=720&fit=crop" alt="场馆外景" loading="lazy">
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=960&h=720&fit=crop" alt="更衣室设施" loading="lazy">
+        </div>
+      </div>
+      <div class="carousel-dots" id="carouselDots">
+        <span class="carousel-dot active"></span>
+        <span class="carousel-dot"></span>
+        <span class="carousel-dot"></span>
+        <span class="carousel-dot"></span>
+      </div>
+    </div>
+
+    <!-- Venue Info -->
+    <section class="venue-info fade-in">
+      <span class="venue-sport-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+        篮球
+      </span>
+      <h1 class="venue-name">朝阳体育中心</h1>
+      <div class="venue-rating-row">
+        <span class="venue-rating">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          4.8
+          <span class="venue-rating-count">(326条评价)</span>
+        </span>
+      </div>
+      <div class="venue-address">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span class="venue-address-text">
+          北京市朝阳区望京西路8号
+          <span class="venue-distance">1.2km</span>
+        </span>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Facilities -->
+    <section class="facilities-section fade-in fade-in-delay-1">
+      <div class="section-label">场馆设施</div>
+      <div class="facilities-grid">
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <span class="facility-name">停车场</span>
+        </div>
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12h16a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H4"/>
+              <path d="M4 8V6a2 2 0 0 1 2-2h2"/>
+              <path d="M4 20v-5"/>
+              <path d="M8 20v-3"/>
+              <path d="M12 20v-5"/>
+            </svg>
+          </div>
+          <span class="facility-name">淋浴间</span>
+        </div>
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6.5 6.5h11"/>
+              <path d="M6.5 17.5h11"/>
+              <rect x="2" y="8" width="4" height="8" rx="1"/>
+              <rect x="18" y="8" width="4" height="8" rx="1"/>
+              <line x1="6" y1="12" x2="18" y2="12"/>
+            </svg>
+          </div>
+          <span class="facility-name">器材租赁</span>
+        </div>
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v6l3-2"/>
+              <path d="M12 2v6l-3-2"/>
+              <path d="M12 8c-4 0-8 3-8 7h16c0-4-4-7-8-7z"/>
+              <path d="M8 22h8"/>
+              <path d="M12 15v7"/>
+            </svg>
+          </div>
+          <span class="facility-name">饮水机</span>
+        </div>
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <span class="facility-name">WiFi</span>
+        </div>
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5z"/>
+              <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/>
+            </svg>
+          </div>
+          <span class="facility-name">音响</span>
+        </div>
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <span class="facility-name">监控</span>
+        </div>
+        <div class="facility-item">
+          <div class="facility-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <span class="facility-name">急救</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Time Slots Preview -->
+    <section class="slots-section fade-in fade-in-delay-2">
+      <div class="slots-header">
+        <div class="section-label" style="margin-bottom: 0;">可用时段</div>
+        <span style="font-size: var(--text-caption); color: var(--color-text-tertiary);">今日有 8 个可预约</span>
+      </div>
+      <div class="slots-date-scroll" id="dateScroll">
+        <button class="date-chip selected" data-date="0">今天 5/8</button>
+        <button class="date-chip" data-date="1">明天 5/9</button>
+        <button class="date-chip" data-date="2">周六 5/10</button>
+        <button class="date-chip" data-date="3">周日 5/11</button>
+        <button class="date-chip" data-date="4">周一 5/12</button>
+      </div>
+      <div class="slots-preview" id="slotsPreview">
+        <span class="slot-chip booked">09:00</span>
+        <span class="slot-chip booked">10:00</span>
+        <span class="slot-chip available">11:00</span>
+        <span class="slot-chip booked">12:00</span>
+        <span class="slot-chip available">13:00</span>
+        <span class="slot-chip available">14:00</span>
+        <span class="slot-chip booked">15:00</span>
+        <span class="slot-chip available">16:00</span>
+        <span class="slot-chip available">17:00</span>
+        <span class="slot-chip booked">18:00</span>
+        <span class="slot-chip available">19:00</span>
+        <span class="slot-chip available">20:00</span>
+      </div>
+      <div class="slots-more">
+        <button class="slots-more-btn">查看全部时段 →</button>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Reviews -->
+    <section class="reviews-section fade-in fade-in-delay-3">
+      <div class="section-label">用户评价</div>
+      <div class="reviews-summary">
+        <div class="reviews-score">
+          <div class="reviews-score-number">4.8</div>
+          <div class="reviews-score-stars">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="opacity: 0.3;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="reviews-score-count">326条评价</div>
+        </div>
+        <div class="reviews-bars">
+          <div class="review-bar-row">
+            <span>5</span>
+            <div class="review-bar"><div class="review-bar-fill" style="width: 72%;"></div></div>
+            <span>72%</span>
+          </div>
+          <div class="review-bar-row">
+            <span>4</span>
+            <div class="review-bar"><div class="review-bar-fill" style="width: 18%;"></div></div>
+            <span>18%</span>
+          </div>
+          <div class="review-bar-row">
+            <span>3</span>
+            <div class="review-bar"><div class="review-bar-fill" style="width: 6%;"></div></div>
+            <span>6%</span>
+          </div>
+          <div class="review-bar-row">
+            <span>2</span>
+            <div class="review-bar"><div class="review-bar-fill" style="width: 3%;"></div></div>
+            <span>3%</span>
+          </div>
+          <div class="review-bar-row">
+            <span>1</span>
+            <div class="review-bar"><div class="review-bar-fill" style="width: 1%;"></div></div>
+            <span>1%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-avatar">张</div>
+          <div>
+            <div class="review-author">张明</div>
+            <div class="review-date">3天前</div>
+          </div>
+          <div class="review-stars">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+        <p class="review-text">场地很棒，木地板弹性很好，灯光也足够亮。周末人多但秩序不错，淋浴间热水充足。唯一建议是停车场入口不太好找。</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-avatar">李</div>
+          <div>
+            <div class="review-author">李婷</div>
+            <div class="review-date">1周前</div>
+          </div>
+          <div class="review-stars">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="opacity: 0.3;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+        <p class="review-text">和朋友约了周六下午，场地很干净，空调温度刚好。就是高峰期价格有点贵，平时来性价比更高。</p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Description -->
+    <section class="desc-section fade-in fade-in-delay-4">
+      <div class="section-label">场馆介绍</div>
+      <div class="desc-text">
+        <p>朝阳体育中心位于望京核心区域，是北京东部规模最大的综合性体育场馆之一。篮球馆采用专业级枫木地板，配备 LED 高清灯光系统，全场无影区设计。</p>
+        <p>场馆设有 4 块标准篮球场，支持全场/半场灵活划分。更衣室配备热水淋浴、吹风机和储物柜。停车场可容纳 200+ 车位，地铁 15 号线望京站步行 8 分钟可达。</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-inner">
+      <div class="cta-price">
+        <span class="cta-price-label">起步价</span>
+        <span class="cta-price-amount">¥120 <span class="cta-price-unit">/小时</span></span>
+      </div>
+      <a href="booking-flow.html" class="btn-book">立即预订</a>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // Carousel
+    // ============================================
+    const track = document.getElementById('carouselTrack');
+    const dots = document.getElementById('carouselDots').children;
+    let currentSlide = 0;
+    const totalSlides = track.children.length;
+
+    function goToSlide(index) {
+      currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      Array.from(dots).forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+    }
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    track.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    track.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        goToSlide(diff > 0 ? currentSlide + 1 : currentSlide - 1);
+      }
+    }, { passive: true });
+
+    // Dot click
+    Array.from(dots).forEach((dot, i) => {
+      dot.addEventListener('click', () => goToSlide(i));
+      dot.style.cursor = 'pointer';
+    });
+
+    // ============================================
+    // Date Chips
+    // ============================================
+    document.querySelectorAll('.date-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    // ============================================
+    // Slot chip click → navigate to booking
+    // ============================================
+    document.querySelectorAll('.slot-chip.available').forEach(chip => {
+      chip.addEventListener('click', function() {
+        window.location.href = 'booking-flow.html';
+      });
+    });
+
+    // ============================================
+    // Slots more button
+    // ============================================
+    document.querySelector('.slots-more-btn')?.addEventListener('click', function() {
+      window.location.href = 'booking-flow.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,35 +1,35 @@
-# Product
+# 产品
 
-## Register
+## 注册
 
-product
+产品
 
-## Users
+## 用户
 
-Sports enthusiasts — active people who play sports regularly and want to find, compare, and book venues (courts, fields, gyms, facilities). They're mobile-first, often booking on the go, and want fast answers: where can I play, when, and how do I reserve it?
+体育爱好者 — 经常运动的活跃人群，希望寻找、比较和预订运动场地（球场、田径场、健身房、运动设施）。他们以移动端为主，经常在出行途中预订，需要快速获得答案：在哪里可以运动、什么时候、如何预订？
 
-## Product Purpose
+## 产品目的
 
-A venue discovery and booking platform for sports enthusiasts. Users search for nearby sports venues, check availability, compare options, and book sessions. The app removes friction between wanting to play and actually playing — making the path from "I want to play" to "I'm booked" as short as possible.
+一个面向体育爱好者的运动场地发现和预订平台。用户搜索附近的运动场地，查看可用性，比较选项，并预订时段。该应用消除了想运动和实际运动之间的摩擦 — 让从"我想运动"到"我已预订"的路径尽可能短。
 
-## Brand Personality
+## 品牌个性
 
-Energetic, bold, confident. Think Nike Training Club or Peloton — the interface should feel like a warm-up, not a spreadsheet. Motivating without being loud. Physical, dynamic, alive. Three words: **active, sharp, inviting**.
+充满活力、大胆、自信。参考 Nike Training Club 或 Peloton — 界面应该让人感觉像热身，而不是电子表格。激励人心但不喧闹。动感、动态、鲜活。三个关键词：**活力、锐利、亲切**。
 
-## Anti-references
+## 反面参考
 
-- Corporate / enterprise software: no sterile dashboards, no grey-on-grey, no "business productivity" vibes
-- Avoid anything that feels like a B2B SaaS admin panel or a government booking portal
-- No generic Bootstrap/Material Design defaults
+- 企业/公司软件：不要呆板的仪表盘，不要灰色叠灰色，不要"商业生产力"的感觉
+- 避免任何像 B2B SaaS 管理面板或政府预订门户的设计
+- 不要通用的 Bootstrap/Material Design 默认样式
 
-## Design Principles
+## 设计原则
 
-1. **Speed to action** — every screen should push the user toward booking. Minimize steps, maximize clarity.
-2. **Show, don't tell** — venue photos, maps, and availability at a glance. No walls of text.
-3. **Feel the energy** — the interface should feel active and physical, not administrative. Motion, imagery, and color should evoke movement.
-4. **Earn trust through clarity** — transparent pricing, honest availability, clear cancellation. No dark patterns.
-5. **Mobile-first, always** — designed for someone standing at a park checking their phone, not sitting at a desk.
+1. **快速行动** — 每个屏幕都应推动用户预订。减少步骤，最大化清晰度。
+2. **展示而非描述** — 场地照片、地图和可用性一目了然。不要大段文字。
+3. **感受能量** — 界面应感觉活跃和动感，而非行政化。动效、图像和颜色应唤起运动感。
+4. **通过清晰赢得信任** — 透明定价、真实可用性、清晰取消政策。不要暗黑模式。
+5. **始终移动优先** — 为站在公园里看手机的人设计，而不是坐在办公桌前的人。
 
-## Accessibility & Inclusion
+## 无障碍与包容性
 
-WCAG AA compliance. Good contrast ratios, keyboard navigable, screen-reader friendly. Consider users in bright outdoor environments (high contrast, large touch targets).
+符合 WCAG AA 标准。良好的对比度，键盘可导航，屏幕阅读器友好。考虑在明亮户外环境使用的用户（高对比度、大触摸目标）。
