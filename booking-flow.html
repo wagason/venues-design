@@ -1028,6 +1028,184 @@
                 color: var(--color-text-secondary);
             }
 
+            /* Video Service Step */
+            .video-step-scroll {
+                flex: 1;
+                overflow-y: auto;
+                padding: var(--space-5);
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-5);
+                padding-bottom: 100px;
+            }
+            .video-step-intro {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-2);
+            }
+            .video-step-title {
+                font-size: var(--text-h2);
+                font-weight: 700;
+                line-height: var(--line-height-heading);
+            }
+            .video-step-desc {
+                font-size: var(--text-body-sm);
+                color: var(--color-text-secondary);
+                line-height: var(--line-height-body);
+            }
+            .video-cards {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-4);
+            }
+            .video-card {
+                background: var(--color-surface-raised);
+                border-radius: var(--radius-lg);
+                border: 2px solid var(--color-border);
+                overflow: hidden;
+                cursor: pointer;
+                transition: all var(--duration-small) var(--ease-out-expo);
+            }
+            .video-card:hover {
+                border-color: var(--color-accent-ring);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+            .video-card:active {
+                transform: translateY(0);
+            }
+            .video-card:focus-visible {
+                outline: 2px solid var(--color-accent);
+                outline-offset: 2px;
+            }
+            .video-card.selected {
+                border-color: var(--color-accent);
+                box-shadow: 0 0 0 1px var(--color-accent);
+            }
+            .video-card-preview {
+                position: relative;
+                height: 160px;
+                overflow: hidden;
+            }
+            .video-card-preview-bg {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .video-card-preview-icon {
+                font-size: 3rem;
+                filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            }
+            .video-card-play {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .video-card-play svg {
+                width: 48px;
+                height: 48px;
+                color: white;
+                opacity: 0.9;
+                filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            }
+            .video-card-badge {
+                position: absolute;
+                top: var(--space-3);
+                right: var(--space-3);
+                padding: var(--space-1) var(--space-3);
+                border-radius: var(--radius-pill);
+                font-size: var(--text-caption);
+                font-weight: 600;
+                backdrop-filter: blur(8px);
+            }
+            .badge-live {
+                background: oklch(0.6 0.2 25 / 0.85);
+                color: white;
+            }
+            .badge-record {
+                background: oklch(0.18 0.008 200 / 0.7);
+                color: white;
+            }
+            .video-card-body {
+                padding: var(--space-4) var(--space-5);
+                display: flex;
+                align-items: center;
+                gap: var(--space-4);
+            }
+            .video-card-check {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: 2px solid var(--color-border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                transition: all var(--duration-micro) var(--ease-out-expo);
+            }
+            .video-card.selected .video-card-check {
+                background: var(--color-accent);
+                border-color: var(--color-accent);
+            }
+            .video-card-check svg {
+                width: 16px;
+                height: 16px;
+                color: white;
+                opacity: 0;
+                transition: opacity var(--duration-micro);
+            }
+            .video-card.selected .video-card-check svg {
+                opacity: 1;
+            }
+            .video-card-info {
+                flex: 1;
+                min-width: 0;
+            }
+            .video-card-name {
+                font-size: var(--text-body);
+                font-weight: 700;
+                margin-bottom: 2px;
+            }
+            .video-card-desc {
+                font-size: var(--text-body-sm);
+                color: var(--color-text-secondary);
+                line-height: 1.4;
+            }
+            .video-card-price {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                flex-shrink: 0;
+            }
+            .video-card-price-amount {
+                font-size: var(--text-h3);
+                font-weight: 800;
+                color: var(--color-accent);
+                font-variant-numeric: tabular-nums;
+            }
+            .video-card-price-unit {
+                font-size: var(--text-caption);
+                color: var(--color-text-tertiary);
+            }
+            .video-skip-btn {
+                align-self: center;
+                padding: var(--space-3) var(--space-6);
+                font-size: var(--text-body-sm);
+                font-weight: 600;
+                color: var(--color-text-secondary);
+                background: transparent;
+                border-radius: var(--radius-pill);
+                transition: all var(--duration-micro);
+            }
+            .video-skip-btn:hover {
+                background: var(--color-surface);
+                color: var(--color-text);
+            }
+
             /* Bottom Bar */
             .bottom-bar {
                 position: sticky;
@@ -1234,6 +1412,7 @@
                 selectedSport: "football",
                 selectedDate: 0,
                 selectedCourt: null,
+                selectedVideoService: null,
                 selectedRangeStart: null,
                 selectedRangeEnd: null,
                 isSubmitting: false,
@@ -1254,6 +1433,8 @@
                 },
                 cancellationPolicy:
                     "预约后24小时内可免费取消。24小时至开场前2小时取消收取50%费用。开场前2小时内不可取消。",
+                videoDescription:
+                    "该场地配备专业运动摄像头，可为您提供运动视频服务。直播生成分享链接，录像赛后可回看分析。",
                 facilities: [
                     "停车场",
                     "淋浴间",
@@ -1272,188 +1453,54 @@
                 { id: "swimming", name: "游泳", icon: "🏊" },
             ];
 
+            const videoServices = {
+                live: {
+                    id: "live",
+                    title: "实时直播",
+                    desc: "生成直播链接，分享给朋友实时观看你的精彩表现",
+                    price: 30,
+                },
+                record: {
+                    id: "record",
+                    title: "全场录像",
+                    desc: "全程高清录制，赛后可回看分析技术动作",
+                    price: 20,
+                },
+            };
+
+            const videoIcons = {
+                live: { icon: "📡", gradient: "linear-gradient(135deg, oklch(0.35 0.08 25), oklch(0.25 0.06 200))", badge: "badge-live", badgeText: "LIVE" },
+                record: { icon: "🎬", gradient: "linear-gradient(135deg, oklch(0.25 0.01 200), oklch(0.18 0.008 200))", badge: "badge-record", badgeText: "录像" },
+            };
+
             const courts = [
-                // 足球
-                {
-                    id: "f1",
-                    name: "5人制A场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 200,
-                    status: "available",
-                },
-                {
-                    id: "f2",
-                    name: "5人制B场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 200,
-                    status: "available",
-                },
-                {
-                    id: "f3",
-                    name: "7人制A场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 350,
-                    status: "partial",
-                },
-                {
-                    id: "f4",
-                    name: "11人制全场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 600,
-                    status: "available",
-                },
-                {
-                    id: "f5",
-                    name: "5人制B场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 200,
-                    status: "available",
-                },
-                {
-                    id: "f6",
-                    name: "7人制A场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 350,
-                    status: "partial",
-                },
-                {
-                    id: "f7",
-                    name: "11人制全场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 600,
-                    status: "available",
-                },
-                {
-                    id: "f8",
-                    name: "5人制B场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 200,
-                    status: "available",
-                },
-                {
-                    id: "f9",
-                    name: "7人制A场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 350,
-                    status: "partial",
-                },
-                {
-                    id: "f10",
-                    name: "11人制全场",
-                    sport: "football",
-                    icon: "⚽",
-                    priceFrom: 600,
-                    status: "available",
-                },
-                // 篮球
-                {
-                    id: "b1",
-                    name: "室内A场",
-                    sport: "basketball",
-                    icon: "🏀",
-                    priceFrom: 120,
-                    status: "available",
-                },
-                {
-                    id: "b2",
-                    name: "室内B场",
-                    sport: "basketball",
-                    icon: "🏀",
-                    priceFrom: 120,
-                    status: "available",
-                },
-                {
-                    id: "b3",
-                    name: "室外全场",
-                    sport: "basketball",
-                    icon: "🏀",
-                    priceFrom: 80,
-                    status: "partial",
-                },
-                // 羽毛球
-                {
-                    id: "m1",
-                    name: "1号场",
-                    sport: "badminton",
-                    icon: "🏸",
-                    priceFrom: 60,
-                    status: "available",
-                },
-                {
-                    id: "m2",
-                    name: "2号场",
-                    sport: "badminton",
-                    icon: "🏸",
-                    priceFrom: 60,
-                    status: "available",
-                },
-                {
-                    id: "m3",
-                    name: "3号场",
-                    sport: "badminton",
-                    icon: "🏸",
-                    priceFrom: 60,
-                    status: "full",
-                },
-                {
-                    id: "m4",
-                    name: "4号场",
-                    sport: "badminton",
-                    icon: "🏸",
-                    priceFrom: 60,
-                    status: "available",
-                },
-                // 网球
-                {
-                    id: "t1",
-                    name: "硬地A场",
-                    sport: "tennis",
-                    icon: "🎾",
-                    priceFrom: 100,
-                    status: "available",
-                },
-                {
-                    id: "t2",
-                    name: "硬地B场",
-                    sport: "tennis",
-                    icon: "🎾",
-                    priceFrom: 100,
-                    status: "partial",
-                },
-                {
-                    id: "t3",
-                    name: "红土场",
-                    sport: "tennis",
-                    icon: "🎾",
-                    priceFrom: 150,
-                    status: "available",
-                },
-                // 游泳
-                {
-                    id: "s1",
-                    name: "50米标准池",
-                    sport: "swimming",
-                    icon: "🏊",
-                    priceFrom: 50,
-                    status: "available",
-                },
-                {
-                    id: "s2",
-                    name: "25米训练池",
-                    sport: "swimming",
-                    icon: "🏊",
-                    priceFrom: 35,
-                    status: "available",
-                },
+                // 足球 — 全部支持直播+录像
+                { id: "f1", name: "5人制A场", sport: "football", icon: "⚽", priceFrom: 200, status: "available", videoSupport: ["live", "record"] },
+                { id: "f2", name: "5人制B场", sport: "football", icon: "⚽", priceFrom: 200, status: "available", videoSupport: ["live", "record"] },
+                { id: "f3", name: "7人制A场", sport: "football", icon: "⚽", priceFrom: 350, status: "partial", videoSupport: ["live", "record"] },
+                { id: "f4", name: "11人制全场", sport: "football", icon: "⚽", priceFrom: 600, status: "available", videoSupport: ["live", "record"] },
+                { id: "f5", name: "5人制C场", sport: "football", icon: "⚽", priceFrom: 200, status: "available", videoSupport: ["live", "record"] },
+                { id: "f6", name: "7人制B场", sport: "football", icon: "⚽", priceFrom: 350, status: "partial", videoSupport: ["live", "record"] },
+                { id: "f7", name: "11人制全场B", sport: "football", icon: "⚽", priceFrom: 600, status: "available", videoSupport: ["live", "record"] },
+                { id: "f8", name: "5人制D场", sport: "football", icon: "⚽", priceFrom: 200, status: "available", videoSupport: ["live", "record"] },
+                { id: "f9", name: "7人制C场", sport: "football", icon: "⚽", priceFrom: 350, status: "partial", videoSupport: ["live", "record"] },
+                { id: "f10", name: "11人制全场C", sport: "football", icon: "⚽", priceFrom: 600, status: "available", videoSupport: ["live", "record"] },
+                // 篮球 — 室内支持录像，室外不支持
+                { id: "b1", name: "室内A场", sport: "basketball", icon: "🏀", priceFrom: 120, status: "available", videoSupport: ["record"] },
+                { id: "b2", name: "室内B场", sport: "basketball", icon: "🏀", priceFrom: 120, status: "available", videoSupport: ["record"] },
+                { id: "b3", name: "室外全场", sport: "basketball", icon: "🏀", priceFrom: 80, status: "partial" },
+                // 羽毛球 — 不支持
+                { id: "m1", name: "1号场", sport: "badminton", icon: "🏸", priceFrom: 60, status: "available" },
+                { id: "m2", name: "2号场", sport: "badminton", icon: "🏸", priceFrom: 60, status: "available" },
+                { id: "m3", name: "3号场", sport: "badminton", icon: "🏸", priceFrom: 60, status: "full" },
+                { id: "m4", name: "4号场", sport: "badminton", icon: "🏸", priceFrom: 60, status: "available" },
+                // 网球 — 不支持
+                { id: "t1", name: "硬地A场", sport: "tennis", icon: "🎾", priceFrom: 100, status: "available" },
+                { id: "t2", name: "硬地B场", sport: "tennis", icon: "🎾", priceFrom: 100, status: "partial" },
+                { id: "t3", name: "红土场", sport: "tennis", icon: "🎾", priceFrom: 150, status: "available" },
+                // 游泳 — 不支持
+                { id: "s1", name: "50米标准池", sport: "swimming", icon: "🏊", priceFrom: 50, status: "available" },
+                { id: "s2", name: "25米训练池", sport: "swimming", icon: "🏊", priceFrom: 35, status: "available" },
             ];
 
             function generateDates() {
@@ -1502,6 +1549,11 @@
 
             const datesData = generateDates();
 
+            function getCourtVideoSupport(courtId) {
+                const court = courts.find((c) => c.id === courtId);
+                return court?.videoSupport || [];
+            }
+
             function generateSlots(dateStr, courtId) {
                 const slots = [];
                 const court = courts.find((c) => c.id === courtId) || courts[0];
@@ -1535,7 +1587,7 @@
             const toastEl = document.getElementById("toast");
 
             function updateStepIndicator() {
-                const total = 3;
+                const total = 4;
                 let html = "";
                 for (let i = 1; i <= total; i++) {
                     if (i === state.currentStep)
@@ -1550,12 +1602,13 @@
             function updateHeader() {
                 const titles = {
                     1: "选择场地与时间",
-                    2: "确认预约",
-                    3: "预约成功",
+                    2: "选择视频服务",
+                    3: "确认预约",
+                    4: "预约成功",
                 };
                 headerTitle.textContent = titles[state.currentStep];
                 backBtn.style.visibility =
-                    state.currentStep === 1 || state.currentStep === 3
+                    state.currentStep === 1 || state.currentStep === 4
                         ? "hidden"
                         : "visible";
                 updateStepIndicator();
@@ -1775,6 +1828,7 @@
                         state.selectedCourt = null;
                         state.selectedRangeStart = null;
                         state.selectedRangeEnd = null;
+                        state.selectedVideoService = null;
                         render();
                     });
                 });
@@ -1786,6 +1840,7 @@
                         state.selectedCourt = null;
                         state.selectedRangeStart = null;
                         state.selectedRangeEnd = null;
+                        state.selectedVideoService = null;
                         render();
                     });
                 });
@@ -1875,16 +1930,115 @@
                             state.selectedCourt &&
                             state.selectedRangeStart &&
                             state.selectedRangeEnd
-                        )
-                            goToStep(2);
+                        ) {
+                            const videoSupport = getCourtVideoSupport(state.selectedCourt);
+                            goToStep(videoSupport.length > 0 ? 2 : 3);
+                        }
                     });
                 }
             }
 
             // ============================================
-            // Step 2: Confirm
+            // Step 2: Video Service Selection
             // ============================================
             function renderStep2() {
+                const videoSupport = getCourtVideoSupport(state.selectedCourt);
+                const court = courts.find((c) => c.id === state.selectedCourt);
+
+                const cardsHtml = videoSupport
+                    .map((vsId) => {
+                        const vs = videoServices[vsId];
+                        const vi = videoIcons[vsId];
+                        const isSelected = state.selectedVideoService === vsId;
+                        return `
+            <button class="video-card ${isSelected ? "selected" : ""}" data-service="${vsId}">
+              <div class="video-card-preview">
+                <div class="video-card-preview-bg" style="background: ${vi.gradient}">
+                  <span class="video-card-preview-icon">${vi.icon}</span>
+                </div>
+                <div class="video-card-play">
+                  <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <span class="video-card-badge ${vi.badge}">${vi.badgeText}</span>
+              </div>
+              <div class="video-card-body">
+                <div class="video-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="video-card-info">
+                  <div class="video-card-name">${vs.title}</div>
+                  <div class="video-card-desc">${vs.desc}</div>
+                </div>
+                <div class="video-card-price">
+                  <span class="video-card-price-amount">¥${vs.price}</span>
+                  <span class="video-card-price-unit">/小时</span>
+                </div>
+              </div>
+            </button>`;
+                    })
+                    .join("");
+
+                const selectedVs = state.selectedVideoService ? videoServices[state.selectedVideoService] : null;
+
+                let priceLabel = "请选择视频服务或跳过";
+                let totalPrice = 0;
+                const dateStr = datesData[state.selectedDate].dateStr;
+                const slots = generateSlots(dateStr, state.selectedCourt);
+                const start = Math.min(state.selectedRangeStart.slot, state.selectedRangeEnd.slot);
+                const end = Math.max(state.selectedRangeStart.slot, state.selectedRangeEnd.slot);
+                for (let i = start; i <= end; i++) totalPrice += slots[i].price;
+                const duration = end - start + 1;
+                const venueTotal = totalPrice;
+                if (selectedVs) {
+                    priceLabel = `场地 ¥${venueTotal} + ${selectedVs.title} ¥${selectedVs.price}×${duration}`;
+                    totalPrice += selectedVs.price * duration;
+                } else {
+                    priceLabel = `${duration}小时 · 场地费 ¥${venueTotal}`;
+                }
+
+                return `
+        <div class="step">
+          <div class="video-step-scroll">
+            <div class="video-step-intro">
+              <h2 class="video-step-title">选择视频服务</h2>
+              <p class="video-step-desc">${venue.videoDescription}</p>
+            </div>
+            <div class="video-cards">${cardsHtml}</div>
+            <button class="video-skip-btn" id="skipVideoBtn">不需要视频服务</button>
+          </div>
+          <div class="bottom-bar">
+            <div class="price-summary">
+              <span class="price-label">${priceLabel}</span>
+              <span class="price-amount accent">¥${totalPrice}</span>
+            </div>
+            <button class="btn-primary" id="videoNextBtn">下一步</button>
+          </div>
+        </div>`;
+            }
+
+            function bindStep2Events() {
+                content.querySelectorAll(".video-card").forEach((card) => {
+                    card.addEventListener("click", () => {
+                        const service = card.dataset.service;
+                        state.selectedVideoService = state.selectedVideoService === service ? null : service;
+                        render();
+                    });
+                });
+
+                document.getElementById("skipVideoBtn")?.addEventListener("click", () => {
+                    state.selectedVideoService = null;
+                    goToStep(3);
+                });
+
+                document.getElementById("videoNextBtn")?.addEventListener("click", () => {
+                    goToStep(3);
+                });
+            }
+
+            // ============================================
+            // Step 3: Confirm
+            // ============================================
+            function renderStep3() {
                 const court = courts.find((c) => c.id === state.selectedCourt);
                 const selectedDate = datesData[state.selectedDate];
                 const dateStr = selectedDate.dateStr;
@@ -1900,6 +2054,8 @@
                 const duration = end - start + 1;
                 let totalPrice = 0;
                 for (let i = start; i <= end; i++) totalPrice += slots[i].price;
+                const videoCost = state.selectedVideoService ? videoServices[state.selectedVideoService].price * duration : 0;
+                totalPrice += videoCost;
                 const timeRange =
                     slots[start].time.split("-")[0] +
                     " - " +
@@ -1934,6 +2090,11 @@
                   <span class="detail-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>单价</span>
                   <span class="detail-value">¥${slots[start].price}-${slots[end].price}/小时</span>
                 </div>
+                ${state.selectedVideoService ? `
+                <div class="detail-row">
+                  <span class="detail-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>${videoServices[state.selectedVideoService].title}</span>
+                  <span class="detail-value">¥${videoServices[state.selectedVideoService].price}/小时 × ${duration}</span>
+                </div>` : ""}
                 <div class="detail-divider"></div>
                 <div class="detail-row detail-total">
                   <span class="detail-label">总计</span>
@@ -1994,7 +2155,7 @@
       `;
             }
 
-            function bindStep2Events() {
+            function bindStep3Events() {
                 const confirmBtn = document.getElementById("confirmBtn");
                 if (confirmBtn) {
                     confirmBtn.addEventListener("click", async () => {
@@ -2006,15 +2167,15 @@
                         state.bookingId =
                             "BK" + Date.now().toString(36).toUpperCase();
                         state.isSubmitting = false;
-                        goToStep(3);
+                        goToStep(4);
                     });
                 }
             }
 
             // ============================================
-            // Step 3: Success
+            // Step 4: Success
             // ============================================
-            function renderStep3() {
+            function renderStep4() {
                 const court = courts.find((c) => c.id === state.selectedCourt);
                 const selectedDate = datesData[state.selectedDate];
                 const slots = generateSlots(
@@ -2032,6 +2193,8 @@
                 const duration = end - start + 1;
                 let totalPrice = 0;
                 for (let i = start; i <= end; i++) totalPrice += slots[i].price;
+                const videoCost = state.selectedVideoService ? videoServices[state.selectedVideoService].price * duration : 0;
+                totalPrice += videoCost;
                 const timeRange =
                     slots[start].time.split("-")[0] +
                     " - " +
@@ -2067,6 +2230,7 @@
                 <div class="receipt-row"><span class="receipt-label">日期</span><span class="receipt-value">${selectedDate.month}${selectedDate.day}日 ${selectedDate.weekday}</span></div>
                 <div class="receipt-row"><span class="receipt-label">时段</span><span class="receipt-value">${timeRange}（${duration}小时）</span></div>
                 <div class="receipt-row"><span class="receipt-label">运动类型</span><span class="receipt-value">${court.name}</span></div>
+                ${state.selectedVideoService ? `<div class="receipt-row"><span class="receipt-label">视频服务</span><span class="receipt-value">${videoServices[state.selectedVideoService].title} ¥${videoCost}</span></div>` : ""}
                 <div class="receipt-divider"></div>
                 <div class="receipt-row"><span class="receipt-label">支付金额</span><span class="receipt-value" style="font-size:var(--text-h3);color:var(--color-accent);font-weight:800;">¥${totalPrice}</span></div>
                 <div class="receipt-email">确认邮件已发送至 <strong>user@example.com</strong></div>
@@ -2091,7 +2255,7 @@
       `;
             }
 
-            function bindStep3Events() {
+            function bindStep4Events() {
                 document
                     .getElementById("addToCalendarBtn")
                     ?.addEventListener("click", () =>
@@ -2140,6 +2304,10 @@
                         content.innerHTML = renderStep3();
                         bindStep3Events();
                         break;
+                    case 4:
+                        content.innerHTML = renderStep4();
+                        bindStep4Events();
+                        break;
                 }
             }
 
@@ -2162,17 +2330,24 @@
                 }, 200);
             }
 
+            function getPrevStep(current) {
+                if (current === 3) {
+                    const videoSupport = getCourtVideoSupport(state.selectedCourt);
+                    return videoSupport.length > 0 ? 2 : 1;
+                }
+                return current - 1;
+            }
             backBtn.addEventListener("click", () => {
-                if (state.currentStep > 1 && state.currentStep < 3)
-                    goToStep(state.currentStep - 1);
+                if (state.currentStep > 1 && state.currentStep < 4)
+                    goToStep(getPrevStep(state.currentStep));
             });
             document.addEventListener("keydown", (e) => {
                 if (
                     e.key === "Escape" &&
                     state.currentStep > 1 &&
-                    state.currentStep < 3
+                    state.currentStep < 4
                 )
-                    goToStep(state.currentStep - 1);
+                    goToStep(getPrevStep(state.currentStep));
             });
 
             render();
