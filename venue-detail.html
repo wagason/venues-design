@@ -23,7 +23,6 @@
       --color-surface: oklch(0.975 0.004 200);
       --color-surface-raised: oklch(0.99 0.003 200);
       --color-success: oklch(0.7 0.15 145);
-      --color-success-subtle: oklch(0.95 0.04 145);
       --color-warning: oklch(0.75 0.15 85);
       --color-error: oklch(0.6 0.18 25);
 
@@ -45,6 +44,7 @@
       --space-8: 32px;
       --space-10: 40px;
       --space-12: 48px;
+      --space-16: 64px;
 
       --shadow-sm: 0 1px 3px oklch(0.18 0.008 200 / 0.08);
       --shadow-md: 0 4px 12px oklch(0.18 0.008 200 / 0.12);
@@ -85,7 +85,7 @@
       -moz-osx-font-smoothing: grayscale;
       min-height: 100dvh;
       padding-top: env(safe-area-inset-top);
-      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      padding-bottom: calc(100px + env(safe-area-inset-bottom));
     }
 
     button {
@@ -132,6 +132,7 @@
       width: 100%;
       height: 100%;
       transition: transform var(--duration-large) var(--ease-out-expo);
+      will-change: transform;
     }
 
     .carousel-slide {
@@ -146,7 +147,7 @@
       object-fit: cover;
     }
 
-    .carousel-dots {
+    .carousel-indicator {
       position: absolute;
       bottom: var(--space-3);
       left: 50%;
@@ -155,21 +156,20 @@
       gap: var(--space-2);
     }
 
-    .carousel-dot {
+    .indicator-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: oklch(1 0 0 / 0.5);
+      background: oklch(1 0 0 / 0.45);
       transition: all var(--duration-small) var(--ease-out-expo);
     }
 
-    .carousel-dot.active {
+    .indicator-dot.active {
       width: 20px;
       border-radius: 3px;
-      background: oklch(1 0 0 / 0.95);
+      background: oklch(1 0 0 / 0.92);
     }
 
-    /* Floating Nav Buttons */
     .carousel-nav {
       position: absolute;
       top: 0;
@@ -189,15 +189,15 @@
       align-items: center;
       justify-content: center;
       border-radius: var(--radius-md);
-      background: oklch(0.18 0.008 200 / 0.4);
+      background: oklch(0.18 0.008 200 / 0.35);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      color: white;
+      color: oklch(0.99 0 0);
       transition: background var(--duration-micro) var(--ease-out-expo);
     }
 
     .nav-btn:hover {
-      background: oklch(0.18 0.008 200 / 0.6);
+      background: oklch(0.18 0.008 200 / 0.55);
     }
 
     .nav-btn svg {
@@ -211,30 +211,10 @@
     }
 
     /* ============================================
-       Venue Info
+       Venue Identity
        ============================================ */
-    .venue-info {
-      padding: var(--space-5);
-    }
-
-    .venue-sport-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      padding: var(--space-1) var(--space-3);
-      background: var(--color-accent-subtle);
-      border-radius: var(--radius-pill);
-      font-size: var(--text-caption);
-      font-weight: 600;
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: var(--space-3);
-    }
-
-    .venue-sport-badge svg {
-      width: 14px;
-      height: 14px;
+    .venue-identity {
+      padding: var(--space-5) var(--space-5) var(--space-4);
     }
 
     .venue-name {
@@ -245,63 +225,225 @@
       margin-bottom: var(--space-3);
     }
 
-    .venue-rating-row {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-      margin-bottom: var(--space-3);
-    }
-
-    .venue-rating {
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-size: var(--text-body);
-      font-weight: 700;
-      color: var(--color-text);
-    }
-
-    .venue-rating svg {
-      width: 18px;
-      height: 18px;
-      color: var(--color-warning);
-    }
-
-    .venue-rating-count {
-      font-size: var(--text-body-sm);
-      font-weight: 400;
-      color: var(--color-text-secondary);
-    }
-
     .venue-address {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: var(--space-2);
       font-size: var(--text-body-sm);
       color: var(--color-text-secondary);
       line-height: 1.4;
+      margin-bottom: var(--space-3);
     }
 
     .venue-address svg {
       width: 16px;
       height: 16px;
       flex-shrink: 0;
-      margin-top: 2px;
       color: var(--color-text-tertiary);
     }
 
-    .venue-address-text {
-      flex: 1;
-    }
-
-    .venue-distance {
+    .venue-distance-badge {
       display: inline-flex;
       align-items: center;
-      gap: var(--space-1);
+      gap: 3px;
+      padding: 2px var(--space-2);
+      background: var(--color-accent-subtle);
+      border-radius: var(--radius-pill);
       font-size: var(--text-caption);
       font-weight: 600;
       color: var(--color-accent);
-      margin-left: var(--space-2);
+      margin-left: var(--space-1);
+    }
+
+    .venue-distance-badge svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ============================================
+       Contact Info
+       ============================================ */
+    .contact-section {
+      padding: 0 var(--space-5) var(--space-4);
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+    }
+
+    .contact-row + .contact-row {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .contact-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--color-accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .contact-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .contact-label {
+      font-size: var(--text-caption);
+      color: var(--color-text-tertiary);
+      font-weight: 500;
+    }
+
+    .contact-value {
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .contact-action {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      color: var(--color-accent);
+      transition: background var(--duration-micro) var(--ease-out-expo);
+      flex-shrink: 0;
+    }
+
+    .contact-action:hover {
+      background: var(--color-accent-subtle);
+    }
+
+    .contact-action svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ============================================
+       Map Card
+       ============================================ */
+    .map-section {
+      padding: 0 var(--space-5) var(--space-5);
+    }
+
+    .map-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--color-surface-raised);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .map-preview {
+      width: 100%;
+      height: 160px;
+      background: oklch(0.93 0.012 200);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(oklch(0.85 0.01 200 / 0.4) 1px, transparent 1px),
+        linear-gradient(90deg, oklch(0.85 0.01 200 / 0.4) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .map-preview::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, oklch(0.65 0.15 200 / 0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .map-pin {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -100%);
+      width: 32px;
+      height: 40px;
+      filter: drop-shadow(0 2px 4px oklch(0.18 0.008 200 / 0.3));
+    }
+
+    .map-info {
+      padding: var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .map-detail {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .map-transport {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+
+    .transport-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: var(--text-caption);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    .transport-tag svg {
+      width: 13px;
+      height: 13px;
+      color: var(--color-text-tertiary);
+    }
+
+    .btn-navigate {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-accent);
+      color: var(--color-text-on-accent);
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      min-height: 40px;
+    }
+
+    .btn-navigate:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .btn-navigate svg {
+      width: 16px;
+      height: 16px;
     }
 
     /* ============================================
@@ -313,309 +455,80 @@
     }
 
     /* ============================================
-       Facilities
+       Facility Tags (horizontal scroll)
        ============================================ */
     .facilities-section {
-      padding: var(--space-5);
+      padding: var(--space-5) 0 var(--space-5) var(--space-5);
     }
 
-    .section-label {
+    .section-header {
       font-size: var(--text-body-sm);
       font-weight: 600;
       color: var(--color-text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: var(--space-4);
+      padding-right: var(--space-5);
     }
 
-    .facilities-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-4);
+    .facilities-scroll-wrap {
+      position: relative;
+      margin-right: var(--space-5);
     }
 
-    .facility-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--space-2);
-    }
-
-    .facility-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-md);
-      background: var(--color-accent-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-accent);
-    }
-
-    .facility-icon svg {
-      width: 22px;
-      height: 22px;
-    }
-
-    .facility-name {
-      font-size: var(--text-caption);
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      text-align: center;
-    }
-
-    /* ============================================
-       Time Slots Preview
-       ============================================ */
-    .slots-section {
-      padding: var(--space-5);
-    }
-
-    .slots-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: var(--space-4);
-    }
-
-    .slots-date-scroll {
+    .facilities-scroll {
       display: flex;
       gap: var(--space-2);
       overflow-x: auto;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
-      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-1);
     }
 
-    .slots-date-scroll::-webkit-scrollbar {
+    .facilities-scroll::-webkit-scrollbar {
       display: none;
     }
 
-    .date-chip {
+    .facility-tag {
       flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
       padding: var(--space-2) var(--space-4);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
       border-radius: var(--radius-pill);
-      border: 1.5px solid var(--color-border);
       font-size: var(--text-body-sm);
-      font-weight: 600;
-      color: var(--color-text-secondary);
-      transition: all var(--duration-micro) var(--ease-out-expo);
-      cursor: pointer;
+      font-weight: 500;
+      color: var(--color-text);
       white-space: nowrap;
     }
 
-    .date-chip:hover {
-      border-color: var(--color-accent);
+    .facility-tag svg {
+      width: 16px;
+      height: 16px;
       color: var(--color-accent);
-    }
-
-    .date-chip.selected {
-      background: var(--color-accent);
-      border-color: var(--color-accent);
-      color: var(--color-text-on-accent);
-    }
-
-    .slots-preview {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-2);
-    }
-
-    .slot-chip {
-      padding: var(--space-2) var(--space-1);
-      border-radius: var(--radius-sm);
-      text-align: center;
-      font-size: var(--text-caption);
-      font-weight: 600;
-      transition: all var(--duration-micro) var(--ease-out-expo);
-      cursor: pointer;
-      border: 1.5px solid transparent;
-    }
-
-    .slot-chip.available {
-      background: var(--color-accent-subtle);
-      color: var(--color-accent);
-      border-color: var(--color-accent-subtle);
-      cursor: pointer;
-    }
-
-    .slot-chip.available:hover {
-      border-color: var(--color-accent);
-      background: oklch(0.9 0.06 200);
-    }
-
-    .slot-chip.available:active {
-      transform: scale(0.95);
-    }
-
-    .slot-chip.booked {
-      background: var(--color-surface);
-      color: var(--color-text-tertiary);
-      cursor: not-allowed;
-      text-decoration: line-through;
-    }
-
-    .slots-more {
-      margin-top: var(--space-3);
-      text-align: center;
-    }
-
-    .slots-more-btn {
-      font-size: var(--text-body-sm);
-      font-weight: 600;
-      color: var(--color-accent);
-      padding: var(--space-2) var(--space-4);
-      border-radius: var(--radius-pill);
-      transition: background var(--duration-micro) var(--ease-out-expo);
-    }
-
-    .slots-more-btn:hover {
-      background: var(--color-accent-subtle);
-    }
-
-    /* ============================================
-       Reviews Preview
-       ============================================ */
-    .reviews-section {
-      padding: var(--space-5);
-    }
-
-    .reviews-summary {
-      display: flex;
-      gap: var(--space-5);
-      margin-bottom: var(--space-5);
-    }
-
-    .reviews-score {
-      text-align: center;
       flex-shrink: 0;
     }
 
-    .reviews-score-number {
-      font-size: var(--text-display);
-      font-weight: 800;
-      color: var(--color-text);
-      line-height: 1;
+    .scroll-fade {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 48px;
+      background: linear-gradient(90deg, oklch(0.975 0.004 200 / 0), oklch(0.975 0.004 200));
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity var(--duration-small) var(--ease-out-expo);
     }
 
-    .reviews-score-stars {
-      display: flex;
-      gap: 2px;
-      margin-top: var(--space-1);
-      justify-content: center;
-    }
-
-    .reviews-score-stars svg {
-      width: 14px;
-      height: 14px;
-      color: var(--color-warning);
-    }
-
-    .reviews-score-count {
-      font-size: var(--text-caption);
-      color: var(--color-text-tertiary);
-      margin-top: var(--space-1);
-    }
-
-    .reviews-bars {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-      justify-content: center;
-    }
-
-    .review-bar-row {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: var(--text-caption);
-      color: var(--color-text-tertiary);
-    }
-
-    .review-bar-row span:first-child {
-      width: 8px;
-      text-align: right;
-    }
-
-    .review-bar {
-      flex: 1;
-      height: 4px;
-      background: var(--color-border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .review-bar-fill {
-      height: 100%;
-      background: var(--color-warning);
-      border-radius: 2px;
-      transition: width var(--duration-large) var(--ease-out-expo);
-    }
-
-    .review-bar-row span:last-child {
-      width: 28px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Individual Reviews */
-    .review-card {
-      padding: var(--space-4) 0;
-      border-top: 1px solid var(--color-border);
-    }
-
-    .review-header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      margin-bottom: var(--space-2);
-    }
-
-    .review-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--color-accent-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--text-caption);
-      font-weight: 700;
-      color: var(--color-accent);
-    }
-
-    .review-author {
-      font-size: var(--text-body-sm);
-      font-weight: 600;
-      color: var(--color-text);
-    }
-
-    .review-date {
-      font-size: var(--text-caption);
-      color: var(--color-text-tertiary);
-    }
-
-    .review-stars {
-      display: flex;
-      gap: 2px;
-      margin-left: auto;
-    }
-
-    .review-stars svg {
-      width: 12px;
-      height: 12px;
-      color: var(--color-warning);
-    }
-
-    .review-text {
-      font-size: var(--text-body-sm);
-      color: var(--color-text-secondary);
-      line-height: 1.5;
+    .scroll-fade.hidden {
+      opacity: 0;
     }
 
     /* ============================================
-       Description
+       Description (collapsible)
        ============================================ */
     .desc-section {
       padding: var(--space-5);
@@ -624,11 +537,51 @@
     .desc-text {
       font-size: var(--text-body-sm);
       color: var(--color-text-secondary);
-      line-height: 1.6;
+      line-height: 1.65;
+      max-width: 65ch;
     }
 
     .desc-text p + p {
       margin-top: var(--space-3);
+    }
+
+    .desc-clamp {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      transition: all var(--duration-small) var(--ease-out-expo);
+    }
+
+    .desc-clamp.expanded {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+
+    .desc-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      margin-top: var(--space-3);
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-accent);
+      padding: var(--space-1) 0;
+      transition: opacity var(--duration-micro) var(--ease-out-expo);
+    }
+
+    .desc-toggle:hover {
+      opacity: 0.8;
+    }
+
+    .desc-toggle svg {
+      width: 14px;
+      height: 14px;
+      transition: transform var(--duration-small) var(--ease-out-expo);
+    }
+
+    .desc-toggle.expanded svg {
+      transform: rotate(180deg);
     }
 
     /* ============================================
@@ -642,8 +595,8 @@
       z-index: 100;
       background: var(--color-surface-raised);
       border-top: 1px solid var(--color-border);
-      padding: var(--space-4) var(--space-5);
-      padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+      padding: var(--space-3) var(--space-5);
+      padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
     }
 
     .bottom-cta-inner {
@@ -658,18 +611,21 @@
     .cta-price {
       display: flex;
       flex-direction: column;
+      flex-shrink: 0;
     }
 
     .cta-price-label {
       font-size: var(--text-caption);
       color: var(--color-text-secondary);
+      line-height: 1.2;
     }
 
     .cta-price-amount {
-      font-size: var(--text-h2);
+      font-size: var(--text-h3);
       font-weight: 800;
       color: var(--color-accent);
       font-variant-numeric: tabular-nums;
+      line-height: 1.3;
     }
 
     .cta-price-unit {
@@ -678,10 +634,39 @@
       color: var(--color-text-tertiary);
     }
 
-    .btn-book {
-      padding: var(--space-3) var(--space-8);
-      min-height: 48px;
-      font-size: var(--text-body);
+    .cta-buttons {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .btn-book-secondary {
+      padding: var(--space-3) var(--space-4);
+      min-height: 44px;
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      color: var(--color-accent);
+      background: transparent;
+      border: 1.5px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-micro) var(--ease-out-expo);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .btn-book-secondary:hover {
+      background: var(--color-accent-subtle);
+    }
+
+    .btn-book-secondary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-book-primary {
+      padding: var(--space-3) var(--space-5);
+      min-height: 44px;
+      font-size: var(--text-body-sm);
       font-weight: 700;
       color: var(--color-text-on-accent);
       background: var(--color-accent);
@@ -690,23 +675,50 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: var(--space-2);
+      white-space: nowrap;
     }
 
-    .btn-book:hover {
+    .btn-book-primary:hover {
       background: var(--color-accent-hover);
       transform: translateY(-1px);
       box-shadow: var(--shadow-md);
     }
 
-    .btn-book:active {
+    .btn-book-primary:active {
       transform: translateY(0);
       box-shadow: none;
     }
 
-    .btn-book:focus-visible {
+    .btn-book-primary:focus-visible,
+    .btn-book-secondary:focus-visible {
       outline: 2px solid var(--color-accent);
       outline-offset: 2px;
+    }
+
+    /* ============================================
+       Toast
+       ============================================ */
+    .toast {
+      position: fixed;
+      bottom: calc(100px + env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--color-text);
+      color: var(--color-text-on-accent);
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-body-sm);
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all var(--duration-small) var(--ease-out-expo);
+      z-index: 200;
+      white-space: nowrap;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     /* ============================================
@@ -716,15 +728,16 @@
       animation: fadeIn var(--duration-large) var(--ease-out-expo) both;
     }
 
-    .fade-in-delay-1 { animation-delay: 100ms; }
-    .fade-in-delay-2 { animation-delay: 200ms; }
-    .fade-in-delay-3 { animation-delay: 300ms; }
-    .fade-in-delay-4 { animation-delay: 400ms; }
+    .fade-in-d1 { animation-delay: 80ms; }
+    .fade-in-d2 { animation-delay: 160ms; }
+    .fade-in-d3 { animation-delay: 240ms; }
+    .fade-in-d4 { animation-delay: 320ms; }
+    .fade-in-d5 { animation-delay: 400ms; }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(12px);
+        transform: translateY(10px);
       }
       to {
         opacity: 1;
@@ -741,7 +754,7 @@
     }
 
     /* ============================================
-       Desktop Adaptation
+       Responsive
        ============================================ */
     @media (min-width: 768px) {
       .app {
@@ -754,32 +767,37 @@
         overflow: hidden;
       }
 
-      .facilities-grid {
-        grid-template-columns: repeat(6, 1fr);
+      .map-preview {
+        height: 200px;
       }
 
-      .slots-preview {
-        grid-template-columns: repeat(6, 1fr);
+      .bottom-cta-inner {
+        max-width: 640px;
       }
     }
 
     @media (min-width: 1024px) {
       .app {
-        max-width: 960px;
-        display: grid;
-        grid-template-columns: 1fr 380px;
-        gap: var(--space-8);
-        padding: var(--space-8) var(--space-5);
+        max-width: 720px;
       }
 
       .carousel {
-        grid-column: 1 / -1;
         aspect-ratio: 21 / 9;
         border-radius: var(--radius-lg);
+        margin-top: var(--space-4);
       }
 
       .bottom-cta-inner {
-        max-width: 960px;
+        max-width: 720px;
+      }
+
+      .bottom-cta {
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        box-shadow: var(--shadow-lg);
+        max-width: 720px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
       }
     }
   </style>
@@ -798,9 +816,7 @@
         <div class="nav-right">
           <button class="nav-btn" aria-label="分享">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="18" cy="5" r="3"/>
-              <circle cx="6" cy="12" r="3"/>
-              <circle cx="18" cy="19" r="3"/>
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
@@ -814,10 +830,10 @@
       </div>
       <div class="carousel-track" id="carouselTrack">
         <div class="carousel-slide">
-          <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=960&h=720&fit=crop" alt="篮球场内景 - 全场木地板" loading="eager">
+          <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=960&h=720&fit=crop" alt="篮球场内景，全场枫木地板" loading="eager">
         </div>
         <div class="carousel-slide">
-          <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?w=960&h=720&fit=crop" alt="篮球场灯光" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?w=960&h=720&fit=crop" alt="场馆灯光系统" loading="lazy">
         </div>
         <div class="carousel-slide">
           <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=960&h=720&fit=crop" alt="场馆外景" loading="lazy">
@@ -826,258 +842,168 @@
           <img src="https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=960&h=720&fit=crop" alt="更衣室设施" loading="lazy">
         </div>
       </div>
-      <div class="carousel-dots" id="carouselDots">
-        <span class="carousel-dot active"></span>
-        <span class="carousel-dot"></span>
-        <span class="carousel-dot"></span>
-        <span class="carousel-dot"></span>
+      <div class="carousel-indicator" id="carouselDots">
+        <span class="indicator-dot active"></span>
+        <span class="indicator-dot"></span>
+        <span class="indicator-dot"></span>
+        <span class="indicator-dot"></span>
       </div>
     </div>
 
-    <!-- Venue Info -->
-    <section class="venue-info fade-in">
-      <span class="venue-sport-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-        篮球
-      </span>
+    <!-- Venue Identity -->
+    <section class="venue-identity fade-in">
       <h1 class="venue-name">朝阳体育中心</h1>
-      <div class="venue-rating-row">
-        <span class="venue-rating">
-          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          4.8
-          <span class="venue-rating-count">(326条评价)</span>
-        </span>
-      </div>
       <div class="venue-address">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-          <circle cx="12" cy="10" r="3"/>
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
         </svg>
-        <span class="venue-address-text">
-          北京市朝阳区望京西路8号
-          <span class="venue-distance">1.2km</span>
+        <span>北京市朝阳区望京西路8号</span>
+        <span class="venue-distance-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M16 8l-4 4-4-4"/>
+          </svg>
+          1.2km
         </span>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Contact Info -->
+    <section class="contact-section fade-in fade-in-d1">
+      <div class="contact-row">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-label">电话</div>
+          <div class="contact-value">138-0000-1234</div>
+        </div>
+        <a href="tel:13800001234" class="contact-action" aria-label="拨打电话">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </a>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-label">微信</div>
+          <div class="contact-value">chaoyang_sports</div>
+        </div>
+        <button class="contact-action" id="copyWechat" aria-label="复制微信号">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Map Card -->
+    <section class="map-section fade-in fade-in-d2">
+      <div class="map-card">
+        <div class="map-preview" role="img" aria-label="朝阳体育中心位置地图">
+          <svg class="map-pin" viewBox="0 0 32 40" fill="none">
+            <path d="M16 0C7.16 0 0 7.16 0 16c0 12 16 24 16 24s16-12 16-24C32 7.16 24.84 0 16 0z" fill="var(--color-accent)"/>
+            <circle cx="16" cy="14" r="6" fill="var(--color-text-on-accent)"/>
+          </svg>
+        </div>
+        <div class="map-info">
+          <div class="map-detail">
+            <div style="font-size: var(--text-body-sm); font-weight: 600; color: var(--color-text);">望京西路8号</div>
+            <div class="map-transport">
+              <span class="transport-tag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M16 8l-4 4-4-4"/>
+                </svg>
+                地铁15号线望京站步行8分钟
+              </span>
+              <span class="transport-tag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+                停车场200+车位
+              </span>
+            </div>
+          </div>
+          <a href="https://uri.amap.com/marker?position=116.48,39.99&name=朝阳体育中心" class="btn-navigate" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 11l19-9-9 19-2-8-8-2z"/>
+            </svg>
+            导航
+          </a>
+        </div>
       </div>
     </section>
 
     <div class="divider"></div>
 
     <!-- Facilities -->
-    <section class="facilities-section fade-in fade-in-delay-1">
-      <div class="section-label">场馆设施</div>
-      <div class="facilities-grid">
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1" y="3" width="15" height="13"/>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
-          </div>
-          <span class="facility-name">停车场</span>
+    <section class="facilities-section fade-in fade-in-d3">
+      <div class="section-header">场馆设施</div>
+      <div class="facilities-scroll-wrap">
+        <div class="facilities-scroll" id="facilitiesScroll">
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            停车场
+          </span>
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H4"/><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M4 20v-5"/><path d="M8 20v-3"/><path d="M12 20v-5"/></svg>
+            淋浴间
+          </span>
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11"/><path d="M6.5 17.5h11"/><rect x="2" y="8" width="4" height="8" rx="1"/><rect x="18" y="8" width="4" height="8" rx="1"/><line x1="6" y1="12" x2="18" y2="12"/></svg>
+            器材租赁
+          </span>
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6l3-2"/><path d="M12 2v6l-3-2"/><path d="M12 8c-4 0-8 3-8 7h16c0-4-4-7-8-7z"/><path d="M8 22h8"/><path d="M12 15v7"/></svg>
+            饮水机
+          </span>
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            WiFi
+          </span>
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg>
+            音响
+          </span>
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            监控
+          </span>
+          <span class="facility-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            急救
+          </span>
         </div>
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 12h16a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H4"/>
-              <path d="M4 8V6a2 2 0 0 1 2-2h2"/>
-              <path d="M4 20v-5"/>
-              <path d="M8 20v-3"/>
-              <path d="M12 20v-5"/>
-            </svg>
-          </div>
-          <span class="facility-name">淋浴间</span>
-        </div>
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6.5 6.5h11"/>
-              <path d="M6.5 17.5h11"/>
-              <rect x="2" y="8" width="4" height="8" rx="1"/>
-              <rect x="18" y="8" width="4" height="8" rx="1"/>
-              <line x1="6" y1="12" x2="18" y2="12"/>
-            </svg>
-          </div>
-          <span class="facility-name">器材租赁</span>
-        </div>
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v6l3-2"/>
-              <path d="M12 2v6l-3-2"/>
-              <path d="M12 8c-4 0-8 3-8 7h16c0-4-4-7-8-7z"/>
-              <path d="M8 22h8"/>
-              <path d="M12 15v7"/>
-            </svg>
-          </div>
-          <span class="facility-name">饮水机</span>
-        </div>
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-              <line x1="8" y1="21" x2="16" y2="21"/>
-              <line x1="12" y1="17" x2="12" y2="21"/>
-            </svg>
-          </div>
-          <span class="facility-name">WiFi</span>
-        </div>
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5z"/>
-              <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/>
-            </svg>
-          </div>
-          <span class="facility-name">音响</span>
-        </div>
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <span class="facility-name">监控</span>
-        </div>
-        <div class="facility-item">
-          <div class="facility-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-            </svg>
-          </div>
-          <span class="facility-name">急救</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Time Slots Preview -->
-    <section class="slots-section fade-in fade-in-delay-2">
-      <div class="slots-header">
-        <div class="section-label" style="margin-bottom: 0;">可用时段</div>
-        <span style="font-size: var(--text-caption); color: var(--color-text-tertiary);">今日有 8 个可预约</span>
-      </div>
-      <div class="slots-date-scroll" id="dateScroll">
-        <button class="date-chip selected" data-date="0">今天 5/8</button>
-        <button class="date-chip" data-date="1">明天 5/9</button>
-        <button class="date-chip" data-date="2">周六 5/10</button>
-        <button class="date-chip" data-date="3">周日 5/11</button>
-        <button class="date-chip" data-date="4">周一 5/12</button>
-      </div>
-      <div class="slots-preview" id="slotsPreview">
-        <span class="slot-chip booked">09:00</span>
-        <span class="slot-chip booked">10:00</span>
-        <span class="slot-chip available">11:00</span>
-        <span class="slot-chip booked">12:00</span>
-        <span class="slot-chip available">13:00</span>
-        <span class="slot-chip available">14:00</span>
-        <span class="slot-chip booked">15:00</span>
-        <span class="slot-chip available">16:00</span>
-        <span class="slot-chip available">17:00</span>
-        <span class="slot-chip booked">18:00</span>
-        <span class="slot-chip available">19:00</span>
-        <span class="slot-chip available">20:00</span>
-      </div>
-      <div class="slots-more">
-        <button class="slots-more-btn">查看全部时段 →</button>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Reviews -->
-    <section class="reviews-section fade-in fade-in-delay-3">
-      <div class="section-label">用户评价</div>
-      <div class="reviews-summary">
-        <div class="reviews-score">
-          <div class="reviews-score-number">4.8</div>
-          <div class="reviews-score-stars">
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="opacity: 0.3;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div class="reviews-score-count">326条评价</div>
-        </div>
-        <div class="reviews-bars">
-          <div class="review-bar-row">
-            <span>5</span>
-            <div class="review-bar"><div class="review-bar-fill" style="width: 72%;"></div></div>
-            <span>72%</span>
-          </div>
-          <div class="review-bar-row">
-            <span>4</span>
-            <div class="review-bar"><div class="review-bar-fill" style="width: 18%;"></div></div>
-            <span>18%</span>
-          </div>
-          <div class="review-bar-row">
-            <span>3</span>
-            <div class="review-bar"><div class="review-bar-fill" style="width: 6%;"></div></div>
-            <span>6%</span>
-          </div>
-          <div class="review-bar-row">
-            <span>2</span>
-            <div class="review-bar"><div class="review-bar-fill" style="width: 3%;"></div></div>
-            <span>3%</span>
-          </div>
-          <div class="review-bar-row">
-            <span>1</span>
-            <div class="review-bar"><div class="review-bar-fill" style="width: 1%;"></div></div>
-            <span>1%</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="review-card">
-        <div class="review-header">
-          <div class="review-avatar">张</div>
-          <div>
-            <div class="review-author">张明</div>
-            <div class="review-date">3天前</div>
-          </div>
-          <div class="review-stars">
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-        </div>
-        <p class="review-text">场地很棒，木地板弹性很好，灯光也足够亮。周末人多但秩序不错，淋浴间热水充足。唯一建议是停车场入口不太好找。</p>
-      </div>
-
-      <div class="review-card">
-        <div class="review-header">
-          <div class="review-avatar">李</div>
-          <div>
-            <div class="review-author">李婷</div>
-            <div class="review-date">1周前</div>
-          </div>
-          <div class="review-stars">
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="opacity: 0.3;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-        </div>
-        <p class="review-text">和朋友约了周六下午，场地很干净，空调温度刚好。就是高峰期价格有点贵，平时来性价比更高。</p>
+        <div class="scroll-fade" id="scrollFade"></div>
       </div>
     </section>
 
     <div class="divider"></div>
 
     <!-- Description -->
-    <section class="desc-section fade-in fade-in-delay-4">
-      <div class="section-label">场馆介绍</div>
-      <div class="desc-text">
+    <section class="desc-section fade-in fade-in-d4">
+      <div class="section-header">场馆介绍</div>
+      <div class="desc-text desc-clamp" id="descText">
         <p>朝阳体育中心位于望京核心区域，是北京东部规模最大的综合性体育场馆之一。篮球馆采用专业级枫木地板，配备 LED 高清灯光系统，全场无影区设计。</p>
         <p>场馆设有 4 块标准篮球场，支持全场/半场灵活划分。更衣室配备热水淋浴、吹风机和储物柜。停车场可容纳 200+ 车位，地铁 15 号线望京站步行 8 分钟可达。</p>
       </div>
+      <button class="desc-toggle" id="descToggle">
+        展开
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
     </section>
 
   </div>
@@ -1089,9 +1015,15 @@
         <span class="cta-price-label">起步价</span>
         <span class="cta-price-amount">¥120 <span class="cta-price-unit">/小时</span></span>
       </div>
-      <a href="booking-flow.html" class="btn-book">立即预订</a>
+      <div class="cta-buttons">
+        <a href="booking-flow.html?type=video" class="btn-book-secondary">预约录像</a>
+        <a href="booking-flow.html" class="btn-book-primary">预订场地</a>
+      </div>
     </div>
   </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">已复制微信号</div>
 
   <script>
     // ============================================
@@ -1110,7 +1042,6 @@
       });
     }
 
-    // Touch swipe support
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -1126,36 +1057,57 @@
       }
     }, { passive: true });
 
-    // Dot click
     Array.from(dots).forEach((dot, i) => {
       dot.addEventListener('click', () => goToSlide(i));
       dot.style.cursor = 'pointer';
     });
 
     // ============================================
-    // Date Chips
+    // Copy WeChat
     // ============================================
-    document.querySelectorAll('.date-chip').forEach(chip => {
-      chip.addEventListener('click', function() {
-        document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-      });
+    const copyBtn = document.getElementById('copyWechat');
+    const toast = document.getElementById('toast');
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('chaoyang_sports');
+      } catch {
+        const input = document.createElement('input');
+        input.value = 'chaoyang_sports';
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+      }
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2000);
     });
 
     // ============================================
-    // Slot chip click → navigate to booking
+    // Facility scroll fade
     // ============================================
-    document.querySelectorAll('.slot-chip.available').forEach(chip => {
-      chip.addEventListener('click', function() {
-        window.location.href = 'booking-flow.html';
-      });
-    });
+    const facilitiesScroll = document.getElementById('facilitiesScroll');
+    const scrollFade = document.getElementById('scrollFade');
+
+    function updateScrollFade() {
+      const { scrollLeft, scrollWidth, clientWidth } = facilitiesScroll;
+      const atEnd = scrollLeft + clientWidth >= scrollWidth - 4;
+      scrollFade.classList.toggle('hidden', atEnd);
+    }
+
+    facilitiesScroll.addEventListener('scroll', updateScrollFade, { passive: true });
+    updateScrollFade();
 
     // ============================================
-    // Slots more button
+    // Description toggle
     // ============================================
-    document.querySelector('.slots-more-btn')?.addEventListener('click', function() {
-      window.location.href = 'booking-flow.html';
+    const descText = document.getElementById('descText');
+    const descToggle = document.getElementById('descToggle');
+
+    descToggle.addEventListener('click', () => {
+      const isExpanded = descText.classList.toggle('expanded');
+      descToggle.classList.toggle('expanded', isExpanded);
+      descToggle.firstChild.textContent = isExpanded ? '收起' : '展开';
     });
   </script>
 </body>
