@@ -191,7 +191,6 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                animation: step-enter var(--duration-large) var(--ease-out-expo);
             }
             .step.exiting {
                 animation: step-exit var(--duration-small) var(--ease-in-expo)
@@ -1308,7 +1307,7 @@
                     status: "available",
                 },
                 {
-                    id: "f2",
+                    id: "f5",
                     name: "5人制B场",
                     sport: "football",
                     icon: "⚽",
@@ -1316,7 +1315,7 @@
                     status: "available",
                 },
                 {
-                    id: "f3",
+                    id: "f6",
                     name: "7人制A场",
                     sport: "football",
                     icon: "⚽",
@@ -1324,7 +1323,7 @@
                     status: "partial",
                 },
                 {
-                    id: "f4",
+                    id: "f7",
                     name: "11人制全场",
                     sport: "football",
                     icon: "⚽",
@@ -1332,7 +1331,7 @@
                     status: "available",
                 },
                 {
-                    id: "f2",
+                    id: "f8",
                     name: "5人制B场",
                     sport: "football",
                     icon: "⚽",
@@ -1340,7 +1339,7 @@
                     status: "available",
                 },
                 {
-                    id: "f3",
+                    id: "f9",
                     name: "7人制A场",
                     sport: "football",
                     icon: "⚽",
@@ -1348,7 +1347,7 @@
                     status: "partial",
                 },
                 {
-                    id: "f4",
+                    id: "f10",
                     name: "11人制全场",
                     sport: "football",
                     icon: "⚽",
@@ -1744,7 +1743,7 @@
           </div>
           <div class="timetable-wrap">
             <div class="timetable-scroll">
-              <div class="timetable" style="grid-template-columns: repeat(${filteredCourts.length}, 1fr);">
+              <div class="timetable" style="grid-template-columns: repeat(${filteredCourts.length}, 100px);">
                 ${courtHeaders}
                 ${gridRows}
               </div>
@@ -2154,9 +2153,11 @@
                 setTimeout(() => {
                     state.currentStep = step;
                     render();
-                    if (isReverse) {
-                        const n = content.querySelector(".step");
-                        if (n) n.classList.add("step-enter-reverse");
+                    const n = content.querySelector(".step");
+                    if (n) {
+                        n.style.animation = isReverse
+                            ? "step-enter-reverse var(--duration-large) var(--ease-out-expo)"
+                            : "step-enter var(--duration-large) var(--ease-out-expo)";
                     }
                 }, 200);
             }
